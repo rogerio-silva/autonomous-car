@@ -4,7 +4,7 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M1 — Fundação do Projeto  ✅ (em andamento)
+## M1 — Fundação do Projeto  ✅
 **Objetivo:** base reprodutível do projeto.
 - Estrutura PlatformIO, esqueleto de firmware modular.
 - Documentação completa (`README`, `CLAUDE.md`, `docs/`).
@@ -14,13 +14,14 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M2 — Plataforma & Locomoção
+## M2 — Plataforma & Locomoção  🚧
 **Objetivo:** o carro se move de forma controlada.
-- Montagem do chassi 2WD + driver L298N (diagrama elétrico, energia).
-- Módulo `motors`: rampas de aceleração, calibração de offset entre motores, curvas diferenciais.
-- Testes de movimento (frente/ré/curvas) e ajuste de PWM.
+- Diagrama de ligação L298N + seção de energia (`hardware.md`).
+- Módulo `motors`: rampas de aceleração não-bloqueantes, trim por motor, curvas diferenciais, failsafe.
+- Persistência da calibração em EEPROM (`storage`).
+- CLI serial estilo WASD (`commands`) para pilotar/testar.
 
-**Entregável:** comandos de movimento confiáveis via serial.
+**Entregável:** comandos de movimento confiáveis via serial (validado por compilação; teste físico na bancada).
 
 ---
 
@@ -60,8 +61,8 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 | Milestone | Status |
 |-----------|--------|
-| M1 | 🚧 |
-| M2 | ⬜ |
+| M1 | ✅ |
+| M2 | 🚧 |
 | M3 | ⬜ |
 | M4 | ⬜ |
 | M5 | ⬜ |

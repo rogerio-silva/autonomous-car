@@ -73,15 +73,74 @@ Limiar linha/fundo: `IR_LINE_THRESHOLD` (calibrar em M3).
 
 Endereço I²C padrão: `0x32`. Configure a HuskyLens em **Protocol Type: I²C** (Settings → Protocol Type).
 
-## 3. Energia (diretriz)
+## 3. Energia
 
-- **Motores** alimentados pela bateria via L298N (VS) — corrente alta.
+- **Motores** alimentados pela bateria via L298N (terminal **VS/+12V**) — corrente alta.
 - **Arduino** alimentado por USB ou fonte própria (VIN/jack).
 - **GND comum** obrigatório entre Arduino, L298N e sensores.
-- Não alimentar motores pelo regulador 5V do Arduino.
+- **Não** alimentar os motores pelo regulador 5V do Arduino (corrente insuficiente / risco de reset).
 
-> Dimensionamento de tensão/corrente e diagrama elétrico completo: **M2**.
+### Jumper de 5V do L298N
+O L298N tem um regulador 5V interno e um jumper "5V-EN":
+- **Bateria ≤ 12V:** jumper **fechado** → o L298N gera 5V (pode alimentar lógica leve). Ainda assim, mantenha o Arduino na sua própria fonte/USB.
+- **Bateria > 12V:** jumper **aberto** e forneça 5V externos ao pino +5V do L298N.
 
-## 4. Diagrama de ligação
+> Dimensionamento: 2 motores "TT" típicos puxam ~200 mA cada sem carga e podem passar de 1 A travados. Uma bateria de 6–7,4 V (ex.: 2S Li-ion ou 4×AA) atende o início do projeto. Ajustar conforme os motores reais no teste de bancada.
 
-Diagrama (Fritzing/imagem) a ser adicionado em `docs/` durante o M2. Por ora, usar as tabelas de pinout acima.
+## 4. Diagrama de ligação (L298N ↔ Mega 2560)
+
+```mermaid
+flowchart LR
+    subgraph BAT["Bateria motores (6-7.4V)"]
+      Vbat["+ / -"]
+    end
+    subgraph L298["Driver L298N"]
+      VS["VS (+12V)"]
+      GNDL["GND"]
+      ENA["ENA"]
+      IN1["IN1"]
+      IN2["IN2"]
+      IN3["IN3"]
+      IN4["IN4"]
+      ENB["ENB"]
+      OUT1["OUT1/OUT2"]
+      OUT3["OUT3/OUT4"]
+    end
+    subgraph MEGA["Arduino Mega 2560"]
+      P5["5 (PWM)"]
+      P22["22"]
+      P23["23"]
+      P24["24"]
+      P25["25"]
+      P6["6 (PWM)"]
+      GNDM["GND"]
+    end
+    ML["Motor Esq."]
+    MR["Motor Dir."]
+
+    Vbat --> VS
+    Vbat --> GNDL
+    GNDL --- GNDM
+    P5 --> ENA
+    P22 --> IN1
+    P23 --> IN2
+    P24 --> IN3
+    P25 --> IN4
+    P6 --> ENB
+    OUT1 --> ML
+    OUT3 --> MR
+```
+
+Versão em texto (caso o Mermaid não renderize):
+
+```
+Mega 5  ── ENA            OUT1/OUT2 ── Motor Esquerdo
+Mega 22 ── IN1   L298N
+Mega 23 ── IN2   (ponte)
+Mega 24 ── IN3
+Mega 25 ── IN4   OUT3/OUT4 ── Motor Direito
+Mega 6  ── ENB
+Mega GND ─ GND ─ (−) bateria        VS ── (+) bateria
+```
+
+> Diagrama mecânico/elétrico em Fritzing pode ser adicionado depois; as tabelas de pinout (§2) e este diagrama são a referência atual.
