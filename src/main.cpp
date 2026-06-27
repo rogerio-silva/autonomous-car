@@ -3,9 +3,9 @@
  *
  * Plataforma: Arduino Mega 2560
  *
- * M4 — Visão: além do MANUAL (CLI serial) e dos modos por sensores
- * (SEGUIR-LINHA, DESVIO), há o modo RASTREIO, que segue um alvo visual da
- * HuskyLens (Tag) via I²C, aproximando-se e mantendo distância.
+ * M5 — Autonomia: além do MANUAL e dos modos isolados (SEGUIR-LINHA,
+ * DESVIO, RASTREIO), há o modo NAVEGACAO, que funde sensores + visão por
+ * prioridade (segurança > alvo > linha > busca). O boot é sempre MANUAL.
  *
  * Loop de controle (não-bloqueante, sem delay()):
  *   commands::poll()    -> teclas: pilotagem manual, modos e calibração
@@ -33,7 +33,7 @@ void setup() {
     }
     commands::begin();
 
-    Serial.print(F("[OK] autonomous-car pronto (M4). Config EEPROM: "));
+    Serial.print(F("[OK] autonomous-car pronto (M5, modo MANUAL). Config EEPROM: "));
     Serial.println(storage::wasLoaded() ? F("carregada") : F("padrao"));
 }
 

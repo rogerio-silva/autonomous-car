@@ -29,6 +29,7 @@ No M2 o carro é pilotado pelo **Monitor Serial** (sem software externo), com um
 | `l` | Modo **SEGUIR-LINHA** (autônomo, array IR) |
 | `v` | Modo **DESVIO** (autônomo, evita obstáculos) |
 | `p` | Modo **RASTREIO** (autônomo, segue alvo da HuskyLens) |
+| `N` | Modo **NAVEGAÇÃO** (autônomo, funde sensores+visão) |
 | `i` | Info de visão (alvo, ID, erro horizontal) |
 | `c` | Mostra leituras/limiares dos IR de linha |
 | `f` | Calibração: captura amostra de **fundo** |
@@ -67,6 +68,9 @@ Use `o` para ver `trimL`/`trimR` a qualquer momento.
 | `l` | SEGUIR-LINHA | Segue a pista pelo array IR com controle proporcional. Para se houver obstáculo muito próximo. |
 | `v` | DESVIO | Anda em cruzeiro e, ao detectar obstáculo, executa a manobra **parar → recuar → girar → retomar** (alternando o lado). |
 | `p` | RASTREIO | Segue um alvo da HuskyLens (Tag): esterça pelo erro horizontal, **aproxima e mantém distância** (para quando o alvo fica grande/perto). Alvo perdido → gira procurando. Use `i` para ver o alvo. |
+| `N` | NAVEGAÇÃO | **Autonomia total**: arbitrador por prioridade — **Segurança (desvio) > Alvo (Tag) > Linha > Busca**. O status mostra a camada ativa, ex.: `modo=NAVEGACAO(ALVO)`. |
+
+> **Boot em MANUAL:** ao ligar, o carro fica parado em MANUAL; acione a autonomia (`N`, `l`, `v`, `p`) por comando. `espaço`/`x` volta a MANUAL a qualquer momento.
 
 Em qualquer modo autônomo, `espaço` ou `x` **para imediatamente** e volta para MANUAL (emergência). Ganhos e durações ficam em [`config.h`](../include/config.h): `FOLLOW_BASE_SPEED`, `FOLLOW_TURN_GAIN`, `FOLLOW_SEARCH_SPEED`, `AVOID_SPEED`, `AVOID_BACK_MS`, `AVOID_TURN_MS`.
 

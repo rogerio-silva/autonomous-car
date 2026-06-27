@@ -43,10 +43,10 @@ O `loop()` não usa `delay()`: `commands::poll()` lê as teclas (pilotagem manua
 
 - **M2 — MANUAL:** locomoção confiável e calibrada via CLI serial.
 - **M3 — modos por sensores:** `behaviors` adiciona **SEGUIR-LINHA** (proporcional pelo array IR) e **DESVIO** (manobra não-bloqueante por obstáculo).
-- **M4 (atual) — visão:** modo **RASTREIO** (`TRACK_TARGET`) — segue um alvo da HuskyLens (Tag), esterçando pelo erro horizontal e aproximando-se até uma distância-alvo, com busca ao perder o alvo.
-- **M5 — autonomia:** fusão sensores+visão e navegação (`NAVIGATE`).
+- **M4 — visão:** modo **RASTREIO** (`TRACK_TARGET`) — segue um alvo da HuskyLens (Tag), esterçando pelo erro horizontal e aproximando-se até uma distância-alvo, com busca ao perder o alvo.
+- **M5 (atual) — autonomia:** modo **NAVEGAÇÃO** (`NAVIGATE`) — funde tudo por prioridade. Reaproveita os núcleos dos modos isolados.
 
-### Modos (M3–M4)
+### Modos isolados (M3–M4)
 ```
         +--------+   l   +--------------+
         | MANUAL | ----> | SEGUIR-LINHA |  erro ponderado (3× IR) -> diferencial
@@ -59,6 +59,26 @@ O `loop()` não usa `delay()`: `commands::poll()` lê as teclas (pilotagem manua
         +--------+ <---- +--------------+  alvo perdido -> gira procurando
                      m   (espaço/x = emergência -> MANUAL em qualquer modo)
 ```
+
+### NAVEGAÇÃO — arbitrador por prioridade (M5)
+O modo `NAVIGATE` (tecla `N`) não é um comportamento novo: é um **arbitrador subsumption** que, a cada loop, escolhe a camada de maior prioridade e delega ao núcleo correspondente. A telemetria expõe a camada ativa: `modo=NAVEGACAO(CAMADA)`.
+
+```
+  a cada loop:
+  ┌────────────────────────────────────────────────────────────┐
+  │ manobra de desvio em andamento? ── sim ─► [SEGURANCA] conclui manobra
+  │            │ não
+  │ obstáculo à frente? ───────────── sim ─► [SEGURANCA] inicia desvio (latch)
+  │            │ não
+  │ alvo visual (Tag) detectado? ──── sim ─► [ALVO] esterça + aproxima
+  │            │ não
+  │ linha sob algum sensor IR? ────── sim ─► [LINHA] segue a linha
+  │            │ não
+  │ nada ──────────────────────────────────► [BUSCA] gira procurando
+  └────────────────────────────────────────────────────────────┘
+```
+
+Princípio: **segurança nunca é preemptada** (a manobra de desvio é latcheada até concluir); abaixo dela, o objetivo (alvo visual) tem precedência sobre o caminho (linha); sem nada, o carro busca ativamente.
 
 Esboço da máquina de estados autônoma (alvo do M5):
 

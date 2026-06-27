@@ -46,13 +46,13 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M5 — Autonomia
+## M5 — Autonomia  🚧
 **Objetivo:** navegação autônoma por fusão de dados.
-- Fusão visão + sensores; máquina de estados completa (`NAVIGATE`).
-- Política de decisão (prioridade segurança → objetivo).
-- Telemetria de depuração e ajustes finais.
+- Modo `NAVIGATE`: arbitrador por prioridade (segurança → alvo → linha → busca).
+- Manobra de desvio latcheada; núcleos de controle reutilizados dos modos isolados.
+- Telemetria da camada ativa; boot em MANUAL.
 
-**Entregável:** carro navegando de forma autônoma combinando visão e sensores.
+**Entregável:** carro navegando de forma autônoma combinando visão e sensores (validado por compilação; sintonia e teste físico na bancada).
 
 ---
 
@@ -64,5 +64,5 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 | M1 | ✅ |
 | M2 | ✅ |
 | M3 | ✅ |
-| M4 | 🚧 |
-| M5 | ⬜ |
+| M4 | ✅ |
+| M5 | 🚧 |

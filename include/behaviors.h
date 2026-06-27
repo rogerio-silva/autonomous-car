@@ -16,7 +16,8 @@ enum Mode {
     MANUAL,        // pilotado pela serial (commands)
     FOLLOW_LINE,   // segue a pista pelo array IR (controle proporcional)
     AVOID,         // anda evitando obstáculos (manobra de desvio)
-    TRACK_TARGET   // segue um alvo visual da HuskyLens (Tag), aproximando-se
+    TRACK_TARGET,  // segue um alvo visual da HuskyLens (Tag), aproximando-se
+    NAVIGATE       // navegação autônoma: funde sensores+visão por prioridade
 };
 
 void begin();
@@ -27,6 +28,10 @@ Mode mode();
 
 // Nome legível do modo atual (para telemetria).
 const __FlashStringHelper* modeName();
+
+// Camada ativa do arbitrador NAVIGATE (SEGURANCA/ALVO/LINHA/BUSCA).
+// Conteúdo só é relevante quando mode() == NAVIGATE.
+const __FlashStringHelper* navLayer();
 
 // Executa o comportamento ativo. Chamar a cada loop() quando mode != MANUAL.
 void update();

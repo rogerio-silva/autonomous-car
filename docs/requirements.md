@@ -109,4 +109,20 @@ Construir um carro autônomo embarcado capaz de **navegar evitando obstáculos**
 
 ---
 
-> **Próxima entrega** (M5) terá seu requisito detalhado aqui no início. Ver [`roadmap.md`](roadmap.md).
+### Entrega M5 — Autonomia  (issue #13)
+**Requisito:** o carro deve **navegar de forma autônoma** fundindo sensores e visão, com política de decisão por prioridade (segurança antes do objetivo) — atende RF06 e fecha o produto.
+
+**Critérios de aceite:**
+- [x] Modo **NAVIGATE** no `behaviors`: arbitrador em camadas — **Segurança (desvio) > Alvo visual (aproximar Tag) > Seguir-linha > Ocioso (girar procurando)**.
+- [x] Manobra de desvio **latcheada** (conclui antes de re-arbitrar).
+- [x] Refator com **núcleos reutilizáveis** (`steerByLine`, `steerByVision`, manobra de desvio) compartilhados pelos modos isolados e pelo NAVIGATE.
+- [x] `commands`: tecla **`N`** (NAVEGAÇÃO) e telemetria com a **camada ativa** (`modo=NAVEGACAO(CAMADA)`).
+- [x] **Boot em MANUAL** (o carro não se move ao energizar).
+- [x] `config`: constante de busca (ocioso).
+- [x] `pio run` compila sem erros/warnings.
+
+**Validação:** compilação verificada (SUCCESS, sem warnings). **Sintonia de prioridades/ganhos e teste físico ficam para a bancada** (sem hardware no ambiente de build).
+
+---
+
+> **Roadmap concluído (M1–M5).** Evoluções futuras (ex.: PID no seguir-linha, telemetria avançada, novos comportamentos) entram como novas entregas seguindo o mesmo processo. Ver [`roadmap.md`](roadmap.md).

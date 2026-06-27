@@ -100,4 +100,9 @@
 #define VISION_SEARCH_SPEED    90  // velocidade de giro ao procurar o alvo
 #define VISION_SEARCH_MS     1200  // janela de busca após perder o alvo
 
+// ===================== Autonomia / navegação (M5) ============
+// NAVIGATE arbitra por prioridade: segurança (desvio) > alvo visual >
+// seguir-linha > ocioso. No estado ocioso, gira procurando algo.
+#define NAV_SEARCH_SPEED       90  // velocidade do giro de busca (ocioso)
+
 #endif // CONFIG_H
