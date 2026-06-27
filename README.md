@@ -32,18 +32,18 @@ autonomous-car/
 │   ├── config.h            # Mapa de pinos e constantes
 │   ├── motors.h            # locomoção 2WD (rampas, trim, failsafe)
 │   ├── sensors.h           # HC-SR04 (mediana) + IR calibrável
-│   ├── behaviors.h         # modos autônomos (seguir-linha / desvio)
+│   ├── behaviors.h         # modos autônomos (linha / desvio / rastreio)
 │   ├── commands.h          # CLI serial (WASD + modos)
 │   ├── storage.h           # config persistente (EEPROM)
-│   └── vision.h
+│   └── vision.h            # alvo da HuskyLens (I²C)
 ├── src/                    # Implementação (.cpp)
 │   ├── main.cpp            # setup()/loop() não-bloqueante
 │   ├── motors.cpp          # locomoção 2WD (L298N)
 │   ├── sensors.cpp         # HC-SR04 + IR (limiares calibráveis)
-│   ├── behaviors.cpp       # seguir-linha (proporcional) + desvio
+│   ├── behaviors.cpp       # seguir-linha + desvio + rastreio visual
 │   ├── commands.cpp        # parsing de comandos serial
 │   ├── storage.cpp         # EEPROM (trim + limiares IR)
-│   └── vision.cpp          # leitura da HuskyLens
+│   └── vision.cpp          # leitura da HuskyLens (maior bloco/Tag)
 ├── lib/                    # Bibliotecas privadas do projeto
 └── docs/                   # Documentação
     ├── requirements.md     # Requisitos do projeto e por entrega
@@ -102,7 +102,7 @@ A partir do M2 o carro é pilotado pelo Monitor Serial (115200 baud), com CLI es
 | `espaço`/`x` | parar | | `k`/`n` | salvar / resetar trim |
 | `+`/`-` | velocidade | | `o`/`t`/`h` | status / telemetria / ajuda |
 
-**Modos (M3):** `m` MANUAL · `l` SEGUIR‑LINHA · `v` DESVIO de obstáculo · `c`/`f`/`g` calibração dos IR. Guia completo em [`docs/serial-control.md`](docs/serial-control.md).
+**Modos:** `m` MANUAL · `l` SEGUIR‑LINHA · `v` DESVIO · `p` RASTREIO (HuskyLens) · `c`/`f`/`g` calibração dos IR · `i` info de visão. Guia completo em [`docs/serial-control.md`](docs/serial-control.md).
 
 ---
 

@@ -6,6 +6,7 @@
 #include "config.h"
 #include "motors.h"
 #include "sensors.h"
+#include "vision.h"
 
 namespace {
 
@@ -19,6 +20,10 @@ bool       g_turnRight  = true;   // alterna o lado do giro a cada desvio
 
 // Última direção de erro do seguir-linha (para reencontrar a linha perdida).
 int8_t     g_lastError  = 0;
+
+// Estado do rastreio visual (M4).
+uint32_t   g_visLastSeen = 0;     // millis() da última detecção
+int16_t    g_visLastDir  = 1;     // direção do último erro (+1 dir / -1 esq)
 
 // ---- Seguir-linha: controle proporcional pelo erro ponderado ----
 void followLine() {
@@ -75,6 +80,37 @@ void avoidObstacles() {
     }
 }
 
+// ---- Rastreio de alvo visual (Tag): esterça + aproxima e mantém distância ----
+void trackTarget() {
+    vision::update();
+
+    // Segurança: nunca avança contra um obstáculo físico próximo.
+    if (sensors::obstacleAhead()) { motors::stop(); return; }
+
+    vision::Target t = vision::primaryTarget();
+    uint32_t now = millis();
+
+    if (t.found) {
+        g_visLastSeen = now;
+        int16_t err = vision::horizontalError();          // -FRAME_W/2 .. +FRAME_W/2
+        g_visLastDir = (err >= 0) ? 1 : -1;
+
+        // Esterço proporcional ao erro horizontal (normalizado por meia-tela).
+        int16_t turn = (int16_t)((int32_t)err * VISION_TURN_GAIN / (VISION_FRAME_W / 2));
+        // Aproxima enquanto o alvo aparece "pequeno"; para quando perto.
+        int16_t fwd  = (t.height >= VISION_TARGET_HEIGHT) ? 0 : VISION_APPROACH_SPEED;
+        motors::setTarget(fwd + turn, fwd - turn);
+    } else {
+        // Alvo perdido: gira procurando por uma janela; depois para.
+        if (now - g_visLastSeen < VISION_SEARCH_MS) {
+            motors::setTarget(g_visLastDir * VISION_SEARCH_SPEED,
+                              -g_visLastDir * VISION_SEARCH_SPEED);
+        } else {
+            motors::stop();
+        }
+    }
+}
+
 } // namespace
 
 namespace behaviors {
@@ -87,7 +123,8 @@ void begin() {
 void setMode(Mode m) {
     g_mode  = m;
     g_phase = AVP_CRUISE;
-    g_lastError = 0;
+    g_lastError  = 0;
+    g_visLastSeen = 0;            // força "alvo perdido" até a primeira detecção
     motors::stop();
 }
 
@@ -95,17 +132,19 @@ Mode mode() { return g_mode; }
 
 const __FlashStringHelper* modeName() {
     switch (g_mode) {
-        case FOLLOW_LINE: return F("SEGUIR-LINHA");
-        case AVOID:       return F("DESVIO");
-        default:          return F("MANUAL");
+        case FOLLOW_LINE:  return F("SEGUIR-LINHA");
+        case AVOID:        return F("DESVIO");
+        case TRACK_TARGET: return F("RASTREIO");
+        default:           return F("MANUAL");
     }
 }
 
 void update() {
     switch (g_mode) {
-        case FOLLOW_LINE: followLine();    break;
-        case AVOID:       avoidObstacles();break;
-        case MANUAL:      default:         break;
+        case FOLLOW_LINE:  followLine();     break;
+        case AVOID:        avoidObstacles(); break;
+        case TRACK_TARGET: trackTarget();    break;
+        case MANUAL:       default:          break;
     }
 }
 

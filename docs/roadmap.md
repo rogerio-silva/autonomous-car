@@ -25,7 +25,7 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M3 — Sensoriamento  🚧
+## M3 — Sensoriamento  ✅
 **Objetivo:** o carro percebe o ambiente.
 - HC-SR04: leitura filtrada (mediana), parada/desvio por obstáculo.
 - Array IR de linha: limiares calibráveis (runtime + EEPROM), seguir-linha proporcional.
@@ -36,13 +36,13 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M4 — Visão Computacional
+## M4 — Visão Computacional  🚧
 **Objetivo:** integrar a HuskyLens como percepção principal.
-- Conexão I²C validada, escolha de algoritmo (tracking/recognition/line/tag).
-- Módulo `vision`: leitura robusta de alvos, IDs e erro horizontal.
-- Estado `TRACK_TARGET` (seguir alvo visual).
+- Conexão I²C; algoritmo **Tag (AprilTag)** como primário.
+- Módulo `vision`: leitura do maior bloco, ID e erro horizontal.
+- Modo **RASTREIO** (`TRACK_TARGET`): esterça pelo erro, aproxima/mantém distância, busca ao perder o alvo.
 
-**Entregável:** o carro reage a alvos detectados pela HuskyLens.
+**Entregável:** o carro reage a alvos detectados pela HuskyLens (validado por compilação; aprendizado de tags e teste físico na bancada).
 
 ---
 
@@ -63,6 +63,6 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 |-----------|--------|
 | M1 | ✅ |
 | M2 | ✅ |
-| M3 | 🚧 |
-| M4 | ⬜ |
+| M3 | ✅ |
+| M4 | 🚧 |
 | M5 | ⬜ |

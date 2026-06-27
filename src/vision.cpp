@@ -14,8 +14,8 @@ namespace {
 HUSKYLENS huskylens;
 vision::Target g_primary = {false, 0, 0, 0, 0, 0};
 
-// Centro do quadro da HuskyLens (resolução 320x240).
-const int16_t FRAME_CENTER_X = 160;
+// Centro do quadro da HuskyLens (para normalizar o erro horizontal).
+const int16_t FRAME_CENTER_X = VISION_FRAME_W / 2;
 }
 
 namespace vision {

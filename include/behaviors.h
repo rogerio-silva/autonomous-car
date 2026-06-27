@@ -13,9 +13,10 @@
 namespace behaviors {
 
 enum Mode {
-    MANUAL,       // pilotado pela serial (commands)
-    FOLLOW_LINE,  // segue a pista pelo array IR (controle proporcional)
-    AVOID         // anda evitando obstáculos (manobra de desvio)
+    MANUAL,        // pilotado pela serial (commands)
+    FOLLOW_LINE,   // segue a pista pelo array IR (controle proporcional)
+    AVOID,         // anda evitando obstáculos (manobra de desvio)
+    TRACK_TARGET   // segue um alvo visual da HuskyLens (Tag), aproximando-se
 };
 
 void begin();
