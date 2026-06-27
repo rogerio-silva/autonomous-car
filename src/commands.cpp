@@ -15,6 +15,7 @@
 #include "config.h"
 #include "motors.h"
 #include "sensors.h"
+#include "vision.h"
 #include "behaviors.h"
 #include "storage.h"
 
@@ -37,6 +38,20 @@ uint8_t addSpeed(uint8_t s, int16_t delta) {
     if (v < SPEED_MIN)         v = SPEED_MIN;
     if (v > MOTOR_SPEED_MAX)   v = MOTOR_SPEED_MAX;
     return (uint8_t)v;
+}
+
+void printVision() {
+    vision::update();
+    vision::Target t = vision::primaryTarget();
+    Serial.print(F("[visao] alvo="));
+    if (t.found) {
+        Serial.print(F("sim id="));   Serial.print(t.id);
+        Serial.print(F(" x="));       Serial.print(t.x);
+        Serial.print(F(" h="));       Serial.print(t.height);
+        Serial.print(F(" erroX="));   Serial.println(vision::horizontalError());
+    } else {
+        Serial.println(F("nao"));
+    }
 }
 
 void printIR() {
@@ -78,9 +93,13 @@ void handleKey(char c) {
         case '4': motors::adjustTrimRight( TRIM_STEP); commands::printStatus(); break;
 
         // --- Modos ---
-        case 'm': behaviors::setMode(behaviors::MANUAL);      Serial.println(F("[modo] MANUAL"));       break;
-        case 'l': behaviors::setMode(behaviors::FOLLOW_LINE); Serial.println(F("[modo] SEGUIR-LINHA")); break;
-        case 'v': behaviors::setMode(behaviors::AVOID);       Serial.println(F("[modo] DESVIO"));        break;
+        case 'm': behaviors::setMode(behaviors::MANUAL);       Serial.println(F("[modo] MANUAL"));       break;
+        case 'l': behaviors::setMode(behaviors::FOLLOW_LINE);  Serial.println(F("[modo] SEGUIR-LINHA")); break;
+        case 'v': behaviors::setMode(behaviors::AVOID);        Serial.println(F("[modo] DESVIO"));        break;
+        case 'p': behaviors::setMode(behaviors::TRACK_TARGET); Serial.println(F("[modo] RASTREIO"));      break;
+
+        // --- Info de visão ---
+        case 'i': printVision(); break;
 
         // --- Calibração IR ---
         case 'c': printIR(); break;
@@ -138,8 +157,9 @@ void printHelp() {
     Serial.println(F("Movimento : w=frente s=re a=esq d=dir  (espaco|x)=parar/emergencia"));
     Serial.println(F("Velocidade: + aumenta   - diminui"));
     Serial.println(F("Trim      : 1/2 esq(-/+)   3/4 dir(-/+)"));
-    Serial.println(F("Modos     : m=MANUAL  l=SEGUIR-LINHA  v=DESVIO"));
+    Serial.println(F("Modos     : m=MANUAL  l=SEGUIR-LINHA  v=DESVIO  p=RASTREIO"));
     Serial.println(F("Calib. IR : c=ver  f=capturar fundo  g=capturar linha"));
+    Serial.println(F("Visao     : i=info do alvo (HuskyLens)"));
     Serial.println(F("Config    : k=salvar(EEPROM)  n=resetar"));
     Serial.println(F("Info      : o=status  t=telemetria on/off  h|?=ajuda"));
     Serial.println(F("Movimento manual so funciona no modo MANUAL."));

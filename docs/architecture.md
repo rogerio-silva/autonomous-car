@@ -23,7 +23,7 @@ O sistema é embarcado e organizado em **camadas**: percepção (sensores + vis�
 
 | Camada | Módulo | Arquivos | Responsabilidade |
 |--------|--------|----------|------------------|
-| Percepção – visão | `vision` | `include/vision.h`, `src/vision.cpp` | Lê resultados da HuskyLens (I²C) e expõe alvo primário + erro horizontal. *(integração em M4)* |
+| Percepção – visão | `vision` | `include/vision.h`, `src/vision.cpp` | Lê a HuskyLens (I²C), seleciona o maior bloco (alvo/Tag) e expõe ID, posição e erro horizontal. |
 | Percepção – sensores | `sensors` | `include/sensors.h`, `src/sensors.cpp` | Distância **filtrada por mediana** (HC-SR04), seguidor de linha (IR) com limiares calibráveis, obstáculo (IR). |
 | Decisão / autonomia | `behaviors` | `include/behaviors.h`, `src/behaviors.cpp` | Modos MANUAL / SEGUIR-LINHA / DESVIO; lógica não-bloqueante que liga `sensors` a `motors`. |
 | Comando (serial) | `main` + `commands` | `src/main.cpp`, `include/commands.h`, `src/commands.cpp` | CLI WASD, seleção de modo e calibração IR. |
@@ -42,20 +42,22 @@ O `loop()` não usa `delay()`: `commands::poll()` lê as teclas (pilotagem manua
 ## 3. Modos de operação (evolução)
 
 - **M2 — MANUAL:** locomoção confiável e calibrada via CLI serial.
-- **M3 (atual) — modos por sensores:** `behaviors` adiciona **SEGUIR-LINHA** (controle proporcional pelo array IR) e **DESVIO** (manobra não-bloqueante por obstáculo), selecionáveis pela serial. MANUAL continua disponível.
-- **M4 — visão:** modo `TRACK_TARGET` (segue alvo da HuskyLens).
+- **M3 — modos por sensores:** `behaviors` adiciona **SEGUIR-LINHA** (proporcional pelo array IR) e **DESVIO** (manobra não-bloqueante por obstáculo).
+- **M4 (atual) — visão:** modo **RASTREIO** (`TRACK_TARGET`) — segue um alvo da HuskyLens (Tag), esterçando pelo erro horizontal e aproximando-se até uma distância-alvo, com busca ao perder o alvo.
 - **M5 — autonomia:** fusão sensores+visão e navegação (`NAVIGATE`).
 
-### Modos do M3
+### Modos (M3–M4)
 ```
         +--------+   l   +--------------+
         | MANUAL | ----> | SEGUIR-LINHA |  erro ponderado (3× IR) -> diferencial
-        |        | <---- |              |  (espaço/x = emergência -> MANUAL)
-        |        |   m   +--------------+
+        |        | <---- |              |
         |        |   v   +--------------+
         |        | ----> |   DESVIO     |  cruzeiro -> ré -> giro -> cruzeiro
-        +--------+ <---- +--------------+  (alterna o lado a cada obstáculo)
-                     m
+        |        | <---- |              |  (alterna o lado a cada obstáculo)
+        |        |   p   +--------------+
+        |        | ----> |   RASTREIO   |  esterça (erro visual) + aproxima/para;
+        +--------+ <---- +--------------+  alvo perdido -> gira procurando
+                     m   (espaço/x = emergência -> MANUAL em qualquer modo)
 ```
 
 Esboço da máquina de estados autônoma (alvo do M5):

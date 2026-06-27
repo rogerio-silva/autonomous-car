@@ -87,4 +87,17 @@
 #define AVOID_BACK_MS        350   // duração da ré
 #define AVOID_TURN_MS        450   // duração do giro
 
+// ===================== Visão / rastreio (M4) =================
+// Resolução do quadro da HuskyLens (para normalizar o erro horizontal).
+#define VISION_FRAME_W       320
+#define VISION_FRAME_H       240
+
+// Rastreio de alvo (Tag): controle proporcional pelo erro horizontal e
+// aproximação até uma "distância-alvo" estimada pelo tamanho do bloco.
+#define VISION_TURN_GAIN      90   // diferencial máx. (no erro de ±metade do quadro)
+#define VISION_APPROACH_SPEED 150  // velocidade ao se aproximar do alvo
+#define VISION_TARGET_HEIGHT  120  // altura do bloco (px) considerada "perto" -> para
+#define VISION_SEARCH_SPEED    90  // velocidade de giro ao procurar o alvo
+#define VISION_SEARCH_MS     1200  // janela de busca após perder o alvo
+
 #endif // CONFIG_H

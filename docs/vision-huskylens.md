@@ -17,7 +17,7 @@ A **Gravity HuskyLens** é uma câmera com IA embarcada: executa a visão comput
 | Tag (AprilTag) Recognition | Marcadores de navegação/estações |
 | Face Recognition | (não prioritário) |
 
-A escolha do(s) algoritmo(s) será definida no **M4**.
+**Algoritmo primário escolhido (M4): Tag (AprilTag) Recognition.** O modo RASTREIO segue o maior bloco de tag detectado. Os demais algoritmos permanecem possíveis (a leitura por "maior bloco" funciona para tags, objetos e cores).
 
 ## 3. Conexão (I²C)
 
@@ -46,10 +46,19 @@ int16_t err = vision::horizontalError();      // -160..160 p/ controle de direç
 2. Apontar para o objeto/linha e pressionar **learn** para atribuir um ID.
 3. O firmware passa a receber blocos/setas com esse ID em `update()`.
 
-## 6. Roadmap da visão
+## Operação do modo RASTREIO (M4)
 
-- **M4:** integração funcional (escolha de algoritmo, leitura robusta, IDs).
-- **M5:** fusão com sensores na lógica de navegação (`TRACK_TARGET`, `NAVIGATE`).
+O modo é selecionado pela serial com a tecla **`p`** (ver [`serial-control.md`](serial-control.md)). Comportamento (`behaviors::trackTarget`):
+- **Esterço:** proporcional ao `horizontalError()` (alvo à direita → vira à direita).
+- **Aproximação:** avança a `VISION_APPROACH_SPEED` enquanto o alvo aparece pequeno e **para** quando a altura do bloco atinge `VISION_TARGET_HEIGHT` (proxy de distância). O ultrassom é uma trava de segurança: para antes de colidir.
+- **Alvo perdido:** gira na direção do último erro por `VISION_SEARCH_MS` para reencontrá-lo; se não achar, para.
+
+Use **`i`** para inspecionar o alvo atual (id, x, altura, erro horizontal). Ganhos e limiares ficam em [`../include/config.h`](../include/config.h) (`VISION_*`).
+
+## Roadmap da visão
+
+- **M4 ✅:** integração funcional — leitura por I²C, modo RASTREIO (Tag) com aproximação e busca.
+- **M5:** fusão com sensores na lógica de navegação (`NAVIGATE`).
 
 ## 7. Referências
 

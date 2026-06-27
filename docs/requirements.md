@@ -89,4 +89,24 @@ Construir um carro autônomo embarcado capaz de **navegar evitando obstáculos**
 
 ---
 
-> **Próximas entregas** (M4–M5) terão seus requisitos detalhados aqui no início de cada uma. Ver [`roadmap.md`](roadmap.md).
+### Entrega M4 — Visão Computacional  (issue #11)
+**Requisito:** o carro deve perceber e **reagir a um alvo visual** detectado pela HuskyLens (Tag/AprilTag) via I²C, aproximando-se e mantendo distância (atende RF05; base para RF06).
+
+**Critérios de aceite:**
+- [x] `vision`: leitura via I²C do **maior bloco** (alvo), com ID, posição e **erro horizontal**; `vision::begin()` chamado no setup.
+- [x] Novo modo **TRACK_TARGET (RASTREIO)** no `behaviors`:
+  - esterço **proporcional** ao erro horizontal;
+  - **aproxima e para** a uma distância-alvo (tamanho do bloco) com segurança por ultrassom;
+  - **alvo perdido → gira procurando** (janela de busca) e depois para.
+- [x] `commands`: tecla **`p`** (RASTREIO) e **`i`** (info de visão: alvo/ID/erro).
+- [x] `main`: `vision::begin()` no setup + dispatch por modo.
+- [x] `config`: constantes de visão (ganho, aproximação, limiar de tamanho, busca).
+- [x] `pio run` compila sem erros/warnings.
+
+**Validação:** compilação verificada (SUCCESS, sem warnings). **Aprendizado das tags, ajuste de ganhos/limiar e teste físico ficam para a bancada** (sem HuskyLens no ambiente de build).
+
+**Fora de escopo (futuro):** fusão completa sensores+visão e navegação (M5).
+
+---
+
+> **Próxima entrega** (M5) terá seu requisito detalhado aqui no início. Ver [`roadmap.md`](roadmap.md).

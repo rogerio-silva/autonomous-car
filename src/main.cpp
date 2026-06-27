@@ -3,9 +3,9 @@
  *
  * Plataforma: Arduino Mega 2560
  *
- * M3 — Sensoriamento: além do modo MANUAL (CLI serial), o carro tem modos
- * autônomos não-bloqueantes (SEGUIR-LINHA e DESVIO) que usam os sensores
- * para comandar os motores. A visão (HuskyLens) entra no M4.
+ * M4 — Visão: além do MANUAL (CLI serial) e dos modos por sensores
+ * (SEGUIR-LINHA, DESVIO), há o modo RASTREIO, que segue um alvo visual da
+ * HuskyLens (Tag) via I²C, aproximando-se e mantendo distância.
  *
  * Loop de controle (não-bloqueante, sem delay()):
  *   commands::poll()    -> teclas: pilotagem manual, modos e calibração
@@ -17,6 +17,7 @@
 #include "storage.h"
 #include "motors.h"
 #include "sensors.h"
+#include "vision.h"
 #include "behaviors.h"
 #include "commands.h"
 
@@ -26,9 +27,13 @@ void setup() {
     motors::begin();
     sensors::begin();
     behaviors::begin();
+
+    if (!vision::begin()) {
+        Serial.println(F("[AVISO] HuskyLens nao encontrada na I2C (modo RASTREIO indisponivel)."));
+    }
     commands::begin();
 
-    Serial.print(F("[OK] autonomous-car pronto (M3). Config EEPROM: "));
+    Serial.print(F("[OK] autonomous-car pronto (M4). Config EEPROM: "));
     Serial.println(storage::wasLoaded() ? F("carregada") : F("padrao"));
 }
 
