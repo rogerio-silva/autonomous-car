@@ -50,4 +50,24 @@ Construir um carro autônomo embarcado capaz de **navegar evitando obstáculos**
 
 ---
 
-> **Próximas entregas** (M2–M5) terão seus requisitos detalhados aqui no início de cada uma. Ver [`roadmap.md`](roadmap.md).
+### Entrega M2 — Plataforma & Locomoção  (issue #5)
+**Requisito:** o carro deve se locomover de forma controlada e confiável, comandável pelo Monitor Serial, sem software externo (atende RF01; base para RNF05).
+
+**Critérios de aceite:**
+- [x] Módulo `motors` não-bloqueante com **rampas** de aceleração/desaceleração (`update()` por loop).
+- [x] Controle diferencial (frente/ré/curvas) com **setpoint de velocidade** (PWM) ajustável.
+- [x] **Trim** por motor (corrige puxada lateral), ajustável em runtime e **persistido em EEPROM** (módulo `storage`).
+- [x] **CLI serial** estilo WASD (`commands`): mover, velocidade, trim, salvar/resetar, status, ajuda.
+- [x] **Failsafe**: motores param se nenhum comando chegar dentro de `FAILSAFE_TIMEOUT_MS`.
+- [x] `main.cpp` refatorado para loop **não-bloqueante** (sem `delay()`), modo manual.
+- [x] **Telemetria** de depuração pela serial.
+- [x] Documentação: `docs/serial-control.md`, diagrama L298N + energia em `hardware.md`, atualização de `architecture.md` e `roadmap.md`.
+- [x] `pio run` compila sem erros/warnings.
+
+**Validação:** compilação verificada (`pio run` SUCCESS, sem warnings). **Teste físico de movimento e ajuste fino do trim ficam para a bancada do usuário** (sem hardware no ambiente de build).
+
+**Fora de escopo (futuro):** uso de sensores na decisão (M3), visão (M4), navegação autônoma (M5).
+
+---
+
+> **Próximas entregas** (M3–M5) terão seus requisitos detalhados aqui no início de cada uma. Ver [`roadmap.md`](roadmap.md).

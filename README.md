@@ -30,13 +30,17 @@ autonomous-car/
 ├── platformio.ini          # Configuração de build (board, libs)
 ├── include/                # Headers (.h) — interfaces dos módulos
 │   ├── config.h            # Mapa de pinos e constantes
-│   ├── motors.h
+│   ├── motors.h            # locomoção 2WD (rampas, trim, failsafe)
+│   ├── commands.h          # CLI serial (WASD)
+│   ├── storage.h           # persistência em EEPROM
 │   ├── sensors.h
 │   └── vision.h
 ├── src/                    # Implementação (.cpp)
-│   ├── main.cpp            # setup()/loop() + máquina de estados
+│   ├── main.cpp            # setup()/loop() não-bloqueante
 │   ├── motors.cpp          # locomoção 2WD (L298N)
-│   ├── sensors.cpp         # HC-SR04 + IR
+│   ├── commands.cpp        # parsing de comandos serial
+│   ├── storage.cpp         # EEPROM (calibração)
+│   ├── sensors.cpp          # HC-SR04 + IR
 │   └── vision.cpp          # leitura da HuskyLens
 ├── lib/                    # Bibliotecas privadas do projeto
 └── docs/                   # Documentação
@@ -85,6 +89,19 @@ As bibliotecas externas (`HUSKYLENS`, `NewPing`) são baixadas automaticamente p
 
 O mapa completo de pinos está em [`docs/hardware.md`](docs/hardware.md) e centralizado em código em [`include/config.h`](include/config.h). **Toda alteração de pino deve ser feita nesses dois lugares.**
 
+## 🎮 Pilotagem via serial (M2)
+
+A partir do M2 o carro é pilotado pelo Monitor Serial (115200 baud), com CLI estilo **WASD**, rampas de aceleração, calibração de trim persistida em EEPROM e failsafe.
+
+| Tecla | Ação | | Tecla | Ação |
+|-------|------|-|-------|------|
+| `w`/`s` | frente / ré | | `1`/`2` | trim esq − / + |
+| `a`/`d` | girar esq / dir | | `3`/`4` | trim dir − / + |
+| `espaço`/`x` | parar | | `k`/`n` | salvar / resetar trim |
+| `+`/`-` | velocidade | | `o`/`t`/`h` | status / telemetria / ajuda |
+
+Guia completo em [`docs/serial-control.md`](docs/serial-control.md).
+
 ---
 
 ## 📚 Documentação
@@ -92,6 +109,7 @@ O mapa completo de pinos está em [`docs/hardware.md`](docs/hardware.md) e centr
 - [Requisitos](docs/requirements.md)
 - [Arquitetura](docs/architecture.md)
 - [Hardware / BOM / Pinout](docs/hardware.md)
+- [Controle serial (M2)](docs/serial-control.md)
 - [Visão computacional (HuskyLens)](docs/vision-huskylens.md)
 - [Fluxo de trabalho Git](docs/git-workflow.md)
 - [Roadmap](docs/roadmap.md)

@@ -23,7 +23,7 @@ Para **cada solicitação** do usuário:
 4. Criar uma **branch dedicada** por entrega: `feat/...`, `fix/...`, `docs/...`, `chore/...`.
 5. Implementar + documentar; **commits pequenos** referenciando a issue (`#N`).
 6. Abrir **pull request** descritivo (fecha a issue com `Closes #N`).
-7. Fazer o **merge** e remover a branch.
+7. Fazer o **merge** (squash). **Preservar a branch** após o merge — não remover (mantemos as branches como histórico de cada atualização).
 
 Detalhes em [`docs/git-workflow.md`](docs/git-workflow.md).
 

@@ -81,15 +81,15 @@ gh pr create \
 ## 7. Merge
 
 ```bash
-gh pr merge --squash --delete-branch
+gh pr merge --squash
 ```
 
 - Estratégia padrão: **squash** (histórico limpo na `main`).
-- Remover a branch após o merge.
+- **Preservar a branch após o merge** — *não* usar `--delete-branch`. As branches de entrega são mantidas como histórico/rastreio de cada atualização.
 
 ## 8. Resumo do ciclo
 
 ```
 planejar+alinhar → requirements.md → issue (milestone+labels)
-   → branch → commits → PR (Closes #N) → merge squash → branch removida
+   → branch → commits → PR (Closes #N) → merge squash → branch preservada
 ```

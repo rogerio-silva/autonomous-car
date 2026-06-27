@@ -47,4 +47,27 @@
 // SDA=20, SCL=21 são fixos no Mega 2560 (barramento I2C de hardware).
 #define HUSKYLENS_I2C_ADDR  0x32
 
+// ===================== Locomoção / rampas (M2) ================
+// Passo de PWM aplicado a cada tick de rampa e intervalo entre ticks.
+// Quanto maior o passo / menor o intervalo, mais rápida a aceleração.
+#define MOTOR_RAMP_STEP        8   // unidades de PWM por tick
+#define MOTOR_RAMP_INTERVAL_MS 10  // intervalo entre ticks de rampa
+
+// Failsafe: se nenhum comando chegar nesse intervalo enquanto os motores
+// estão em movimento, eles param sozinhos (segurança no controle serial).
+#define FAILSAFE_TIMEOUT_MS  1500
+
+// Trim (calibração de offset entre motores): fator multiplicativo por lado,
+// no intervalo [TRIM_MIN, 1.0]. 1.0 = sem correção. Reduz-se o lado mais
+// "forte" para o carro andar reto. Valores padrão e limites de ajuste:
+#define TRIM_DEFAULT          1.00f
+#define TRIM_MIN              0.50f
+#define TRIM_STEP             0.02f  // incremento por tecla de calibração
+
+// ===================== EEPROM (persistência) =================
+// Endereço base e assinatura para validar os dados salvos.
+#define EEPROM_CONFIG_ADDR    0
+#define EEPROM_MAGIC          0xA5C2
+#define EEPROM_VERSION        1
+
 #endif // CONFIG_H
