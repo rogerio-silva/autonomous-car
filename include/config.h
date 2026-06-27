@@ -66,8 +66,25 @@
 
 // ===================== EEPROM (persistência) =================
 // Endereço base e assinatura para validar os dados salvos.
+// Versão 2 (M3): a Config passou a incluir limiares e polaridade dos IR;
+// EEPROM com versão anterior é descartada e os padrões são recarregados.
 #define EEPROM_CONFIG_ADDR    0
 #define EEPROM_MAGIC          0xA5C2
-#define EEPROM_VERSION        1
+#define EEPROM_VERSION        2
+
+// ===================== Sensoriamento / autonomia (M3) ========
+// Polaridade padrão do IR de linha: bits 0..2 setados = "sobre a linha"
+// quando a leitura é ALTA (> limiar). A calibração ajusta isso por sensor.
+#define IR_LINE_HIGH_DEFAULT  0x07
+
+// Seguir-linha (controle proporcional pelo erro ponderado dos 3 sensores).
+#define FOLLOW_BASE_SPEED     150  // velocidade base em linha reta
+#define FOLLOW_TURN_GAIN       80  // diferencial aplicado por unidade de erro
+#define FOLLOW_SEARCH_SPEED    90  // velocidade reduzida ao perder a linha
+
+// Desvio de obstáculo (manobra não-bloqueante: recua e gira).
+#define AVOID_SPEED          160
+#define AVOID_BACK_MS        350   // duração da ré
+#define AVOID_TURN_MS        450   // duração do giro
 
 #endif // CONFIG_H

@@ -1,22 +1,27 @@
 /**
- * commands.cpp — CLI serial estilo WASD
+ * commands.cpp — CLI serial estilo WASD + modos autônomos (M3)
  * Ver include/commands.h, docs/serial-control.md
  *
  * Mapa de teclas (resumo — ver printHelp):
- *   w/s/a/d  mover · espaço ou x  parar
+ *   w/s/a/d  mover (só MANUAL) · espaço ou x  parar/emergência (volta a MANUAL)
  *   + / -    velocidade (setpoint)
  *   1/2 3/4  trim esquerdo / direito
- *   k        salvar trim na EEPROM · n  resetar trim
+ *   m/l/v    modo MANUAL / SEGUIR-LINHA / DESVIO
+ *   c/f/g    calibração IR: ver / capturar fundo / capturar linha
+ *   k        salvar config (trim+IR) na EEPROM · n  resetar config
  *   o        status · t  telemetria contínua · h ou ?  ajuda
  */
 #include "commands.h"
 #include "config.h"
 #include "motors.h"
+#include "sensors.h"
+#include "behaviors.h"
+#include "storage.h"
 
 namespace {
 
-// Setpoint de velocidade ajustável pelo usuário (PWM).
-const uint8_t  SPEED_MIN  = 60;   // abaixo disso o motor tende a travar
+// Setpoint de velocidade ajustável pelo usuário (PWM) — usado no MANUAL.
+const uint8_t  SPEED_MIN  = 60;
 const uint8_t  SPEED_STEP = 15;
 uint8_t        g_speed    = MOTOR_SPEED_CRUISE;
 
@@ -25,6 +30,8 @@ bool           g_telemetry   = false;
 uint32_t       g_lastTelemMs = 0;
 const uint32_t TELEM_PERIOD_MS = 500;
 
+bool isManual() { return behaviors::mode() == behaviors::MANUAL; }
+
 uint8_t addSpeed(uint8_t s, int16_t delta) {
     int16_t v = (int16_t)s + delta;
     if (v < SPEED_MIN)         v = SPEED_MIN;
@@ -32,15 +39,29 @@ uint8_t addSpeed(uint8_t s, int16_t delta) {
     return (uint8_t)v;
 }
 
+void printIR() {
+    int16_t raw[3];
+    sensors::readLineRaw(raw);
+    sensors::LineState ls = sensors::readLine();
+    const storage::Config& c = storage::data();
+    Serial.print(F("[ir] raw="));
+    Serial.print(raw[0]); Serial.print(','); Serial.print(raw[1]); Serial.print(','); Serial.print(raw[2]);
+    Serial.print(F("  limiar="));
+    Serial.print(c.irThreshold[0]); Serial.print(','); Serial.print(c.irThreshold[1]); Serial.print(','); Serial.print(c.irThreshold[2]);
+    Serial.print(F("  linha(E,C,D)="));
+    Serial.print(ls.left); Serial.print(','); Serial.print(ls.center); Serial.print(','); Serial.println(ls.right);
+}
+
 void handleKey(char c) {
     switch (c) {
-        // --- Movimento ---
-        case 'w': motors::forward(g_speed);  break;
-        case 's': motors::backward(g_speed); break;
-        case 'a': motors::turnLeft(g_speed); break;
-        case 'd': motors::turnRight(g_speed);break;
+        // --- Movimento (somente em MANUAL) ---
+        case 'w': if (isManual()) motors::forward(g_speed);  break;
+        case 's': if (isManual()) motors::backward(g_speed); break;
+        case 'a': if (isManual()) motors::turnLeft(g_speed); break;
+        case 'd': if (isManual()) motors::turnRight(g_speed);break;
         case 'x':
-        case ' ': motors::stop();            break;
+        case ' ': behaviors::setMode(behaviors::MANUAL); motors::stop();
+                  Serial.println(F("[stop] parado (MANUAL)")); break;
 
         // --- Velocidade ---
         case '+':
@@ -50,13 +71,34 @@ void handleKey(char c) {
         case '_': g_speed = addSpeed(g_speed, -SPEED_STEP);
                   Serial.print(F("velocidade=")); Serial.println(g_speed); break;
 
-        // --- Trim (calibração) ---
+        // --- Trim (calibração de offset dos motores) ---
         case '1': motors::adjustTrimLeft(-TRIM_STEP);  commands::printStatus(); break;
         case '2': motors::adjustTrimLeft( TRIM_STEP);  commands::printStatus(); break;
         case '3': motors::adjustTrimRight(-TRIM_STEP); commands::printStatus(); break;
         case '4': motors::adjustTrimRight( TRIM_STEP); commands::printStatus(); break;
-        case 'k': motors::saveTrim();  Serial.println(F("[OK] trim salvo na EEPROM")); break;
-        case 'n': motors::resetTrim(); Serial.println(F("[OK] trim resetado")); commands::printStatus(); break;
+
+        // --- Modos ---
+        case 'm': behaviors::setMode(behaviors::MANUAL);      Serial.println(F("[modo] MANUAL"));       break;
+        case 'l': behaviors::setMode(behaviors::FOLLOW_LINE); Serial.println(F("[modo] SEGUIR-LINHA")); break;
+        case 'v': behaviors::setMode(behaviors::AVOID);       Serial.println(F("[modo] DESVIO"));        break;
+
+        // --- Calibração IR ---
+        case 'c': printIR(); break;
+        case 'f': sensors::sampleBackground();
+                  Serial.println(F("[cal] fundo capturado; posicione sobre a linha e tecle 'g'")); break;
+        case 'g':
+            if (sensors::sampleLine()) {
+                Serial.println(F("[cal] linha capturada; limiares atualizados ('k' p/ salvar)"));
+                printIR();
+            } else {
+                Serial.println(F("[cal] capture o FUNDO primeiro (tecle 'f')"));
+            }
+            break;
+
+        // --- Persistência (trim + IR) ---
+        case 'k': storage::save();        Serial.println(F("[OK] config salva na EEPROM")); break;
+        case 'n': storage::resetDefaults(); motors::stop();
+                  Serial.println(F("[OK] config resetada ao padrao")); commands::printStatus(); break;
 
         // --- Info ---
         case 'o': commands::printStatus(); break;
@@ -65,7 +107,6 @@ void handleKey(char c) {
         case 'h':
         case '?': commands::printHelp(); break;
 
-        // Ignora CR/LF e demais.
         case '\r':
         case '\n': break;
         default: break;
@@ -93,23 +134,27 @@ void poll() {
 }
 
 void printHelp() {
-    Serial.println(F("\n===== autonomous-car :: controle serial (M2) ====="));
-    Serial.println(F("Movimento : w=frente  s=re  a=girar-esq  d=girar-dir  (espaco|x)=parar"));
+    Serial.println(F("\n===== autonomous-car :: controle serial (M3) ====="));
+    Serial.println(F("Movimento : w=frente s=re a=esq d=dir  (espaco|x)=parar/emergencia"));
     Serial.println(F("Velocidade: + aumenta   - diminui"));
-    Serial.println(F("Trim esq  : 1 (-)  2 (+)      Trim dir : 3 (-)  4 (+)"));
-    Serial.println(F("Calibracao: k=salvar(EEPROM)  n=resetar"));
+    Serial.println(F("Trim      : 1/2 esq(-/+)   3/4 dir(-/+)"));
+    Serial.println(F("Modos     : m=MANUAL  l=SEGUIR-LINHA  v=DESVIO"));
+    Serial.println(F("Calib. IR : c=ver  f=capturar fundo  g=capturar linha"));
+    Serial.println(F("Config    : k=salvar(EEPROM)  n=resetar"));
     Serial.println(F("Info      : o=status  t=telemetria on/off  h|?=ajuda"));
-    Serial.println(F("Failsafe  : para sozinho se nenhum comando chegar a tempo"));
+    Serial.println(F("Movimento manual so funciona no modo MANUAL."));
     Serial.println(F("=================================================\n"));
 }
 
 void printStatus() {
-    Serial.print(F("[status] vel="));   Serial.print(g_speed);
-    Serial.print(F(" pwmL="));           Serial.print(motors::currentLeft());
-    Serial.print(F(" pwmR="));           Serial.print(motors::currentRight());
-    Serial.print(F(" trimL="));          Serial.print(motors::trimLeft(), 2);
-    Serial.print(F(" trimR="));          Serial.print(motors::trimRight(), 2);
-    Serial.print(F(" mov="));            Serial.println(motors::isMoving() ? F("sim") : F("nao"));
+    Serial.print(F("[status] modo="));  Serial.print(behaviors::modeName());
+    Serial.print(F(" vel="));           Serial.print(g_speed);
+    Serial.print(F(" pwmL="));          Serial.print(motors::currentLeft());
+    Serial.print(F(" pwmR="));          Serial.print(motors::currentRight());
+    Serial.print(F(" trimL="));         Serial.print(motors::trimLeft(), 2);
+    Serial.print(F(" trimR="));         Serial.print(motors::trimRight(), 2);
+    Serial.print(F(" dist="));          Serial.print(sensors::distanceCm());
+    Serial.println(F("cm"));
 }
 
 } // namespace commands

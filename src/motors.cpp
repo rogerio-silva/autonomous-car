@@ -1,6 +1,9 @@
 /**
  * motors.cpp — Locomoção 2WD não-bloqueante (L298N)
  * Ver include/motors.h, include/config.h e docs/serial-control.md
+ *
+ * O trim (calibração) é mantido no cache central de storage (fonte única,
+ * persistida em EEPROM junto com os limiares dos sensores).
  */
 #include "motors.h"
 #include "config.h"
@@ -11,9 +14,6 @@ namespace {
 // Estado das rampas (alvo x atual) por lado, com sinal (-255..255).
 int16_t  g_targetL = 0, g_targetR = 0;
 int16_t  g_currL   = 0, g_currR   = 0;
-
-// Trim por lado (fator multiplicativo aplicado ao PWM).
-float    g_trimL = TRIM_DEFAULT, g_trimR = TRIM_DEFAULT;
 
 // Temporização da rampa e do failsafe.
 uint32_t g_lastRampMs = 0;
@@ -58,13 +58,7 @@ void begin() {
         MOTOR_R_EN, MOTOR_R_IN1, MOTOR_R_IN2
     };
     for (uint8_t p : pins) pinMode(p, OUTPUT);
-
-    // Carrega trim persistido (ou padrões se a EEPROM estiver virgem).
-    storage::Config cfg;
-    storage::load(cfg);
-    g_trimL = clampTrim(cfg.trimLeft);
-    g_trimR = clampTrim(cfg.trimRight);
-
+    // O trim vem de storage::data() (carregado em storage::begin(), no setup).
     brake();
 }
 
@@ -83,8 +77,8 @@ void stop()                  { setTarget(0, 0); }
 void brake() {
     g_targetL = g_targetR = 0;
     g_currL = g_currR = 0;
-    applySide(MOTOR_L_EN, MOTOR_L_IN1, MOTOR_L_IN2, 0, g_trimL);
-    applySide(MOTOR_R_EN, MOTOR_R_IN1, MOTOR_R_IN2, 0, g_trimR);
+    applySide(MOTOR_L_EN, MOTOR_L_IN1, MOTOR_L_IN2, 0, storage::data().trimLeft);
+    applySide(MOTOR_R_EN, MOTOR_R_IN1, MOTOR_R_IN2, 0, storage::data().trimRight);
 }
 
 void update() {
@@ -104,28 +98,25 @@ void update() {
     g_currL = stepToward(g_currL, g_targetL);
     g_currR = stepToward(g_currR, g_targetR);
 
-    applySide(MOTOR_L_EN, MOTOR_L_IN1, MOTOR_L_IN2, g_currL, g_trimL);
-    applySide(MOTOR_R_EN, MOTOR_R_IN1, MOTOR_R_IN2, g_currR, g_trimR);
+    applySide(MOTOR_L_EN, MOTOR_L_IN1, MOTOR_L_IN2, g_currL, storage::data().trimLeft);
+    applySide(MOTOR_R_EN, MOTOR_R_IN1, MOTOR_R_IN2, g_currR, storage::data().trimRight);
 }
 
-// --- Trim / calibração ---
+// --- Trim / calibração (delega ao cache central do storage) ---
 void setTrim(float left, float right) {
-    g_trimL = clampTrim(left);
-    g_trimR = clampTrim(right);
+    storage::data().trimLeft  = clampTrim(left);
+    storage::data().trimRight = clampTrim(right);
 }
-void adjustTrimLeft(float delta)  { g_trimL = clampTrim(g_trimL + delta); }
-void adjustTrimRight(float delta) { g_trimR = clampTrim(g_trimR + delta); }
-void resetTrim()                  { g_trimL = g_trimR = TRIM_DEFAULT; }
-
-void saveTrim() {
-    storage::Config cfg;
-    cfg.trimLeft  = g_trimL;
-    cfg.trimRight = g_trimR;
-    storage::save(cfg);
+void adjustTrimLeft(float delta)  { storage::data().trimLeft  = clampTrim(storage::data().trimLeft  + delta); }
+void adjustTrimRight(float delta) { storage::data().trimRight = clampTrim(storage::data().trimRight + delta); }
+void resetTrim() {
+    storage::data().trimLeft  = TRIM_DEFAULT;
+    storage::data().trimRight = TRIM_DEFAULT;
 }
+void saveTrim() { storage::save(); }
 
-float trimLeft()  { return g_trimL; }
-float trimRight() { return g_trimR; }
+float trimLeft()  { return storage::data().trimLeft; }
+float trimRight() { return storage::data().trimRight; }
 
 // --- Telemetria ---
 int16_t currentLeft()  { return g_currL; }

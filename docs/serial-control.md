@@ -25,9 +25,17 @@ No M2 o carro é pilotado pelo **Monitor Serial** (sem software externo), com um
 | `3` / `4` | Trim do motor **direito** − / + |
 | `k` | Salva o trim atual na **EEPROM** |
 | `n` | Reseta o trim para o padrão |
+| `m` | Modo **MANUAL** (pilotagem pela serial) |
+| `l` | Modo **SEGUIR-LINHA** (autônomo, array IR) |
+| `v` | Modo **DESVIO** (autônomo, evita obstáculos) |
+| `c` | Mostra leituras/limiares dos IR de linha |
+| `f` | Calibração: captura amostra de **fundo** |
+| `g` | Calibração: captura amostra de **linha** (recalcula limiares) |
 | `o` | Imprime o status atual |
 | `t` | Liga/desliga a telemetria contínua |
 | `h` ou `?` | Mostra a ajuda |
+
+> **Movimento manual (`w/a/s/d`) só funciona no modo MANUAL.** Nos modos autônomos, `espaço`/`x` é **parada de emergência** e retorna a MANUAL.
 
 ## Velocidade
 
@@ -49,10 +57,30 @@ Procedimento sugerido:
 
 Use `o` para ver `trimL`/`trimR` a qualquer momento.
 
+## Modos autônomos (M3)
+
+| Tecla | Modo | Descrição |
+|-------|------|-----------|
+| `m` | MANUAL | Pilotagem manual (padrão). |
+| `l` | SEGUIR-LINHA | Segue a pista pelo array IR com controle proporcional. Para se houver obstáculo muito próximo. |
+| `v` | DESVIO | Anda em cruzeiro e, ao detectar obstáculo, executa a manobra **parar → recuar → girar → retomar** (alternando o lado). |
+
+Em qualquer modo autônomo, `espaço` ou `x` **para imediatamente** e volta para MANUAL (emergência). Ganhos e durações ficam em [`config.h`](../include/config.h): `FOLLOW_BASE_SPEED`, `FOLLOW_TURN_GAIN`, `FOLLOW_SEARCH_SPEED`, `AVOID_SPEED`, `AVOID_BACK_MS`, `AVOID_TURN_MS`.
+
+## Calibração dos sensores IR (seguir-linha)
+
+Os limiares linha/fundo variam com a superfície e a iluminação. Procedimento (persistente em EEPROM):
+1. Posicione o array **sobre o fundo** (sem a linha) e tecle `f` (captura o fundo).
+2. Posicione o array **sobre a linha** e tecle `g` (captura a linha e recalcula os limiares e a polaridade de cada sensor).
+3. Tecle `c` para conferir `raw`, `limiar` e o estado `linha(E,C,D)`.
+4. Tecle `k` para salvar na EEPROM (recarrega no próximo boot). `n` reseta tudo ao padrão.
+
+A calibração detecta automaticamente a polaridade (se a linha lê mais alto ou mais baixo que o fundo) por sensor.
+
 ## Telemetria
 
 `t` ativa impressões periódicas (500 ms) no formato:
 
 ```
-[status] vel=180 pwmL=180 pwmR=176 trimL=1.00 trimR=0.98 mov=sim
+[status] modo=MANUAL vel=180 pwmL=180 pwmR=176 trimL=1.00 trimR=0.98 dist=35cm
 ```
