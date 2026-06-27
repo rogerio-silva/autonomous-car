@@ -1,0 +1,5 @@
+# Bibliotecas privadas do projeto
+#
+# Coloque aqui bibliotecas locais (uma pasta por lib, com src/). O PlatformIO
+# as compila automaticamente. Dependências de terceiros ficam em
+# platformio.ini -> lib_deps.

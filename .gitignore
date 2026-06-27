@@ -1,0 +1,32 @@
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# IDE
+.vscode/
+.vs/
+*.code-workspace
+.idea/
+
+# Build / temporários
+*.elf
+*.hex
+*.bin
+*.o
+*.d
+build/
+dist/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Python (scripts auxiliares, se houver)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs
+*.log
