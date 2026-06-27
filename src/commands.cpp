@@ -154,7 +154,7 @@ void poll() {
 }
 
 void printHelp() {
-    Serial.println(F("\n===== autonomous-car :: controle serial (M3) ====="));
+    Serial.println(F("\n===== autonomous-car :: controle serial (M5) ====="));
     Serial.println(F("Movimento : w=frente s=re a=esq d=dir  (espaco|x)=parar/emergencia"));
     Serial.println(F("Velocidade: + aumenta   - diminui"));
     Serial.println(F("Trim      : 1/2 esq(-/+)   3/4 dir(-/+)"));
@@ -178,7 +178,8 @@ void printStatus() {
     Serial.print(F(" trimL="));         Serial.print(motors::trimLeft(), 2);
     Serial.print(F(" trimR="));         Serial.print(motors::trimRight(), 2);
     Serial.print(F(" dist="));          Serial.print(sensors::distanceCm());
-    Serial.println(F("cm"));
+    Serial.print(F("cm irObst="));      Serial.print(sensors::irObstacle() ? F("sim") : F("nao"));
+    Serial.print(F(" obst="));          Serial.println(sensors::obstacleAhead() ? F("sim") : F("nao"));
 }
 
 } // namespace commands
