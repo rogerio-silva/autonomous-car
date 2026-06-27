@@ -115,6 +115,7 @@ O modo **NAVEGAÇÃO** funde sensores + visão por prioridade: **Segurança (des
 - [Hardware / BOM / Pinout](docs/hardware.md)
 - [Montagem completa (esquemático + Fritzing)](docs/assembly/README.md)
 - [Controle serial (M2)](docs/serial-control.md)
+- [Teste de bancada (checklist)](docs/bench-test.md)
 - [Visão computacional (HuskyLens)](docs/vision-huskylens.md)
 - [Fluxo de trabalho Git](docs/git-workflow.md)
 - [Roadmap](docs/roadmap.md)
