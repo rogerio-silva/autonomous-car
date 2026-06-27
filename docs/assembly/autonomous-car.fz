@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  autonomous-car.fz  —  Fritzing sketch (BEST-EFFORT, gerado sem o app Fritzing)
+
+  AVISO IMPORTANTE
+  ================
+  Este arquivo foi escrito MANUALMENTE, fora do aplicativo Fritzing e sem a
+  biblioteca oficial de peças (fzp/svg). Consequências esperadas ao abrir:
+    - As peças podem aparecer como "não encontradas" (moduleIdRef não resolvido),
+      pois os IDs nativos do core do Fritzing não são reproduzíveis à mão.
+    - Os fios (wires) NÃO estão incluídos, porque dependem dos connectorId exatos
+      de cada peça, que só existem na definição oficial.
+  Ou seja: serve como PONTO DE PARTIDA / esqueleto. A montagem fiel deve ser
+  feita seguindo docs/assembly/fritzing-guide.md (netlist completa abaixo, em
+  comentário) e conferida contra docs/assembly/README.md e include/config.h.
+
+  NETLIST (referência — ver fritzing-guide.md):
+    Bateria.+  -> Chave -> L298N.VS ; Bateria.- -> GND comum ; L298N.GND -> Mega.GND
+    Mega.5V -> 5V rail (todos VCC) ; Mega.GND -> GND rail (todos GND)
+    Mega.5->ENA  22->IN1 23->IN2 24->IN3 25->IN4  6->ENB
+    L298N.OUT1/2 -> Motor Esq ; OUT3/4 -> Motor Dir
+    Mega.30->HC-SR04.TRIG  31->ECHO
+    Mega.A0->IR_Linha_E.OUT  A1->IR_Linha_C.OUT  A2->IR_Linha_D.OUT
+    Mega.32->IR_Obstaculo.OUT
+    Mega.20(SDA)->HuskyLens.R   21(SCL)->HuskyLens.T
+-->
+<module fritzingVersion="0.9.6" moduleId="autonomous-car-sketch">
+  <title>autonomous-car</title>
+  <instances>
+    <instance moduleIdRef="ArduinoMEGA2560" modelIndex="1">
+      <title>Arduino Mega 2560</title>
+      <views><breadboardView><geometry z="1.1" x="300" y="260"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="L298N_Module" modelIndex="2">
+      <title>Driver L298N</title>
+      <views><breadboardView><geometry z="1.2" x="620" y="160"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="DCMotor" modelIndex="3">
+      <title>Motor Esquerdo</title>
+      <views><breadboardView><geometry z="1.3" x="860" y="140"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="DCMotor" modelIndex="4">
+      <title>Motor Direito</title>
+      <views><breadboardView><geometry z="1.4" x="860" y="240"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="HCSR04" modelIndex="5">
+      <title>HC-SR04</title>
+      <views><breadboardView><geometry z="1.5" x="620" y="360"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="IRSensor3pin" modelIndex="6">
+      <title>IR Linha Esquerda</title>
+      <views><breadboardView><geometry z="1.6" x="80" y="360"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="IRSensor3pin" modelIndex="7">
+      <title>IR Linha Centro</title>
+      <views><breadboardView><geometry z="1.7" x="80" y="420"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="IRSensor3pin" modelIndex="8">
+      <title>IR Linha Direita</title>
+      <views><breadboardView><geometry z="1.8" x="80" y="480"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="IRSensor3pin" modelIndex="9">
+      <title>IR Obstaculo</title>
+      <views><breadboardView><geometry z="1.9" x="80" y="540"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="HuskyLens4pin" modelIndex="10">
+      <title>Gravity HuskyLens (I2C)</title>
+      <views><breadboardView><geometry z="2.0" x="620" y="460"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="9vBattery" modelIndex="11">
+      <title>Bateria 6-7.4V</title>
+      <views><breadboardView><geometry z="2.1" x="80" y="620"/></breadboardView></views>
+    </instance>
+    <instance moduleIdRef="ToggleSwitch" modelIndex="12">
+      <title>Chave ON/OFF</title>
+      <views><breadboardView><geometry z="2.2" x="300" y="620"/></breadboardView></views>
+    </instance>
+  </instances>
+</module>

@@ -109,6 +109,7 @@ Guia completo em [`docs/serial-control.md`](docs/serial-control.md).
 - [Requisitos](docs/requirements.md)
 - [Arquitetura](docs/architecture.md)
 - [Hardware / BOM / Pinout](docs/hardware.md)
+- [Montagem completa (esquemático + Fritzing)](docs/assembly/README.md)
 - [Controle serial (M2)](docs/serial-control.md)
 - [Visão computacional (HuskyLens)](docs/vision-huskylens.md)
 - [Fluxo de trabalho Git](docs/git-workflow.md)

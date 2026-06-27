@@ -143,4 +143,4 @@ Mega 6  ── ENB
 Mega GND ─ GND ─ (−) bateria        VS ── (+) bateria
 ```
 
-> Diagrama mecânico/elétrico em Fritzing pode ser adicionado depois; as tabelas de pinout (§2) e este diagrama são a referência atual.
+> **Montagem completa** (todos os componentes): esquemático SVG, matriz de conexões, guia e arquivo Fritzing em [`assembly/`](assembly/README.md). O diagrama acima cobre apenas a parte de motores.

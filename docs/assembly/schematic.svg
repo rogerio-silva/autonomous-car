@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1000" font-family="Segoe UI, Arial, sans-serif">
+  <style>
+    .box   { stroke:#37474f; stroke-width:2; rx:8; }
+    .mcu   { fill:#e3f2fd; }
+    .drv   { fill:#f3e5f5; }
+    .mot   { fill:#fff3e0; }
+    .sen   { fill:#e8f5e9; }
+    .vis   { fill:#ede7f6; }
+    .pwr   { fill:#ffebee; }
+    .title { font-size:15px; font-weight:bold; fill:#263238; }
+    .pin   { font-size:11px; fill:#263238; }
+    .lbl   { font-size:11px; fill:#37474f; }
+    .note  { font-size:11px; fill:#607d8b; }
+    .w5v   { stroke:#d32f2f; stroke-width:2.5; fill:none; }
+    .wgnd  { stroke:#212121; stroke-width:2.5; fill:none; }
+    .wpwm  { stroke:#1565c0; stroke-width:2; fill:none; }
+    .wana  { stroke:#2e7d32; stroke-width:2; fill:none; }
+    .wi2c  { stroke:#6a1b9a; stroke-width:2; fill:none; }
+    .wout  { stroke:#ef6c00; stroke-width:3; fill:none; }
+    .wdig  { stroke:#00838f; stroke-width:2; fill:none; }
+    .dot   { fill:#263238; }
+  </style>
+
+  <text x="650" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#263238">autonomous-car — Diagrama de montagem (Arduino Mega 2560)</text>
+  <text x="650" y="56" text-anchor="middle" class="note">Diagrama de ligação. Mapa de pinos autoritativo: docs/assembly/README.md e include/config.h</text>
+
+  <!-- ===== Power rails ===== -->
+  <line x1="70" y1="120" x2="1230" y2="120" class="w5v"/>
+  <text x="76" y="114" class="lbl" fill="#d32f2f" font-weight="bold">+5V (lógica)</text>
+  <line x1="70" y1="960" x2="1230" y2="960" class="wgnd"/>
+  <text x="76" y="954" class="lbl" font-weight="bold">GND (comum)</text>
+
+  <!-- ===== Arduino Mega 2560 ===== -->
+  <rect class="box mcu" x="520" y="350" width="240" height="380"/>
+  <text x="640" y="378" text-anchor="middle" class="title">Arduino Mega 2560</text>
+  <!-- left pins -->
+  <text x="528" y="406" class="pin">5V</text>
+  <text x="528" y="436" class="pin">GND</text>
+  <text x="528" y="522" class="pin">A0</text>
+  <text x="528" y="550" class="pin">A1</text>
+  <text x="528" y="578" class="pin">A2</text>
+  <circle class="dot" cx="520" cy="402" r="3"/>
+  <circle class="dot" cx="520" cy="432" r="3"/>
+  <circle class="dot" cx="520" cy="518" r="3"/>
+  <circle class="dot" cx="520" cy="546" r="3"/>
+  <circle class="dot" cx="520" cy="574" r="3"/>
+  <!-- right pins -->
+  <text x="752" y="402" text-anchor="end" class="pin">5  (PWM)</text>
+  <text x="752" y="424" text-anchor="end" class="pin">6  (PWM)</text>
+  <text x="752" y="450" text-anchor="end" class="pin">22</text>
+  <text x="752" y="472" text-anchor="end" class="pin">23</text>
+  <text x="752" y="494" text-anchor="end" class="pin">24</text>
+  <text x="752" y="516" text-anchor="end" class="pin">25</text>
+  <text x="752" y="560" text-anchor="end" class="pin">20 (SDA)</text>
+  <text x="752" y="582" text-anchor="end" class="pin">21 (SCL)</text>
+  <text x="752" y="628" text-anchor="end" class="pin">30</text>
+  <text x="752" y="650" text-anchor="end" class="pin">31</text>
+  <text x="752" y="694" text-anchor="end" class="pin">32</text>
+  <circle class="dot" cx="760" cy="398" r="3"/>
+  <circle class="dot" cx="760" cy="420" r="3"/>
+  <circle class="dot" cx="760" cy="446" r="3"/>
+  <circle class="dot" cx="760" cy="468" r="3"/>
+  <circle class="dot" cx="760" cy="490" r="3"/>
+  <circle class="dot" cx="760" cy="512" r="3"/>
+  <circle class="dot" cx="760" cy="556" r="3"/>
+  <circle class="dot" cx="760" cy="578" r="3"/>
+  <circle class="dot" cx="760" cy="624" r="3"/>
+  <circle class="dot" cx="760" cy="646" r="3"/>
+  <circle class="dot" cx="760" cy="690" r="3"/>
+
+  <!-- ===== L298N ===== -->
+  <rect class="box drv" x="900" y="280" width="200" height="180"/>
+  <text x="1000" y="306" text-anchor="middle" class="title">Driver L298N</text>
+  <text x="908" y="330" class="pin">ENA</text>
+  <text x="908" y="350" class="pin">IN1</text>
+  <text x="908" y="370" class="pin">IN2</text>
+  <text x="908" y="390" class="pin">IN3</text>
+  <text x="908" y="410" class="pin">IN4</text>
+  <text x="908" y="430" class="pin">ENB</text>
+  <text x="1092" y="330" text-anchor="end" class="pin">VS</text>
+  <text x="1092" y="350" text-anchor="end" class="pin">GND</text>
+  <text x="1092" y="392" text-anchor="end" class="pin">OUT1/2</text>
+  <text x="1092" y="430" text-anchor="end" class="pin">OUT3/4</text>
+  <circle class="dot" cx="900" cy="326" r="3"/>
+  <circle class="dot" cx="900" cy="346" r="3"/>
+  <circle class="dot" cx="900" cy="366" r="3"/>
+  <circle class="dot" cx="900" cy="386" r="3"/>
+  <circle class="dot" cx="900" cy="406" r="3"/>
+  <circle class="dot" cx="900" cy="426" r="3"/>
+  <circle class="dot" cx="1100" cy="326" r="3"/>
+  <circle class="dot" cx="1100" cy="346" r="3"/>
+  <circle class="dot" cx="1100" cy="388" r="3"/>
+  <circle class="dot" cx="1100" cy="426" r="3"/>
+
+  <!-- Motors -->
+  <rect class="box mot" x="1150" y="300" width="120" height="56"/>
+  <text x="1210" y="332" text-anchor="middle" class="lbl" font-weight="bold">Motor Esq.</text>
+  <rect class="box mot" x="1150" y="400" width="120" height="56"/>
+  <text x="1210" y="432" text-anchor="middle" class="lbl" font-weight="bold">Motor Dir.</text>
+  <circle class="dot" cx="1150" cy="328" r="3"/>
+  <circle class="dot" cx="1150" cy="428" r="3"/>
+
+  <!-- ===== HC-SR04 ===== -->
+  <rect class="box sen" x="900" y="510" width="200" height="96"/>
+  <text x="1000" y="534" text-anchor="middle" class="title">HC-SR04</text>
+  <text x="908" y="556" class="pin">VCC</text>
+  <text x="908" y="576" class="pin">TRIG</text>
+  <text x="908" y="596" class="pin">ECHO</text>
+  <text x="1092" y="556" text-anchor="end" class="pin">GND</text>
+  <circle class="dot" cx="900" cy="552" r="3"/>
+  <circle class="dot" cx="900" cy="572" r="3"/>
+  <circle class="dot" cx="900" cy="592" r="3"/>
+  <circle class="dot" cx="1100" cy="552" r="3"/>
+
+  <!-- ===== HuskyLens ===== -->
+  <rect class="box vis" x="900" y="650" width="200" height="110"/>
+  <text x="1000" y="674" text-anchor="middle" class="title">Gravity HuskyLens</text>
+  <text x="908" y="696" class="pin">+ (VCC)</text>
+  <text x="908" y="716" class="pin">- (GND)</text>
+  <text x="908" y="736" class="pin">R = SDA</text>
+  <text x="908" y="754" class="pin">T = SCL</text>
+  <text x="1092" y="700" text-anchor="end" class="note">I²C</text>
+  <circle class="dot" cx="900" cy="692" r="3"/>
+  <circle class="dot" cx="900" cy="712" r="3"/>
+  <circle class="dot" cx="900" cy="732" r="3"/>
+  <circle class="dot" cx="900" cy="750" r="3"/>
+
+  <!-- ===== IR line array ===== -->
+  <rect class="box sen" x="120" y="440" width="220" height="60"/>
+  <text x="230" y="466" text-anchor="middle" class="title">IR Linha Esq.</text>
+  <text x="230" y="486" text-anchor="middle" class="pin">VCC · OUT→A0 · GND</text>
+  <rect class="box sen" x="120" y="520" width="220" height="60"/>
+  <text x="230" y="546" text-anchor="middle" class="title">IR Linha Centro</text>
+  <text x="230" y="566" text-anchor="middle" class="pin">VCC · OUT→A1 · GND</text>
+  <rect class="box sen" x="120" y="600" width="220" height="60"/>
+  <text x="230" y="626" text-anchor="middle" class="title">IR Linha Dir.</text>
+  <text x="230" y="646" text-anchor="middle" class="pin">VCC · OUT→A2 · GND</text>
+  <circle class="dot" cx="340" cy="478" r="3"/>
+  <circle class="dot" cx="340" cy="558" r="3"/>
+  <circle class="dot" cx="340" cy="638" r="3"/>
+
+  <!-- ===== IR obstacle ===== -->
+  <rect class="box sen" x="120" y="690" width="220" height="60"/>
+  <text x="230" y="716" text-anchor="middle" class="title">IR Obstáculo</text>
+  <text x="230" y="736" text-anchor="middle" class="pin">VCC · OUT→32 · GND</text>
+  <circle class="dot" cx="340" cy="720" r="3"/>
+
+  <!-- ===== Battery + Switch ===== -->
+  <rect class="box pwr" x="120" y="840" width="180" height="70"/>
+  <text x="210" y="866" text-anchor="middle" class="title">Bateria 6–7.4V</text>
+  <text x="210" y="888" text-anchor="middle" class="pin">+        −</text>
+  <circle class="dot" cx="180" cy="894" r="3"/>
+  <circle class="dot" cx="250" cy="894" r="3"/>
+  <rect class="box pwr" x="380" y="840" width="120" height="50"/>
+  <text x="440" y="870" text-anchor="middle" class="lbl" font-weight="bold">Chave ON/OFF</text>
+  <circle class="dot" cx="380" cy="865" r="3"/>
+  <circle class="dot" cx="500" cy="865" r="3"/>
+
+  <!-- ============ WIRES ============ -->
+  <!-- 5V taps (red) -->
+  <path class="w5v" d="M520,402 L500,402 L500,120"/>
+  <path class="w5v" d="M900,552 L880,552 L880,120"/>
+  <path class="w5v" d="M900,692 L870,692 L870,120"/>
+  <path class="w5v" d="M340,478 L360,478 L360,120"/>
+  <path class="w5v" d="M340,558 L368,558 L368,120"/>
+  <path class="w5v" d="M340,638 L376,638 L376,120"/>
+  <path class="w5v" d="M340,720 L384,720 L384,120"/>
+
+  <!-- GND taps (black) -->
+  <path class="wgnd" d="M520,432 L490,432 L490,960"/>
+  <path class="wgnd" d="M1100,346 L1130,346 L1130,960"/>
+  <path class="wgnd" d="M1100,552 L1140,552 L1140,960"/>
+  <path class="wgnd" d="M900,712 L860,712 L860,960"/>
+  <path class="wgnd" d="M340,494 L410,494 L410,960" />
+  <path class="wgnd" d="M340,574 L418,574 L418,960"/>
+  <path class="wgnd" d="M340,654 L426,654 L426,960"/>
+  <path class="wgnd" d="M340,736 L434,736 L434,960"/>
+  <path class="wgnd" d="M250,894 L250,960"/>
+
+  <!-- Motor control (blue): Mega->L298N -->
+  <path class="wpwm" d="M760,398 L820,398 L820,326 L900,326"/>
+  <path class="wpwm" d="M760,420 L810,420 L810,426 L900,426"/>
+  <path class="wpwm" d="M760,446 L840,446 L840,346 L900,346"/>
+  <path class="wpwm" d="M760,468 L848,468 L848,366 L900,366"/>
+  <path class="wpwm" d="M760,490 L856,490 L856,386 L900,386"/>
+  <path class="wpwm" d="M760,512 L864,512 L864,406 L900,406"/>
+
+  <!-- Motor outputs (orange) -->
+  <path class="wout" d="M1100,388 L1124,388 L1124,328 L1150,328"/>
+  <path class="wout" d="M1100,426 L1112,426 L1112,428 L1150,428"/>
+
+  <!-- Battery power (red/black thick) + switch -->
+  <path class="w5v" d="M180,894 L180,865 L380,865"/>
+  <path class="w5v" d="M500,865 L660,865 L660,326 L900,326" opacity="0.0"/>
+  <path class="w5v" d="M500,865 L680,865 L680,260 L1100,260 L1100,326"/>
+
+  <!-- Ultrasonic signals (teal) -->
+  <path class="wdig" d="M760,624 L880,624 L880,572 L900,572"/>
+  <path class="wdig" d="M760,646 L872,646 L872,592 L900,592"/>
+
+  <!-- IR obstacle digital (teal) -->
+  <path class="wdig" d="M340,720 L450,720 L450,800 L790,800 L790,690 L760,690"/>
+
+  <!-- Analog IR (green) -->
+  <path class="wana" d="M340,478 L470,478 L470,518 L520,518"/>
+  <path class="wana" d="M340,558 L460,558 L460,546 L520,546"/>
+  <path class="wana" d="M340,638 L450,638 L450,574 L520,574"/>
+
+  <!-- I2C (purple) -->
+  <path class="wi2c" d="M760,556 L840,556 L840,732 L900,732"/>
+  <path class="wi2c" d="M760,578 L832,578 L832,750 L900,750"/>
+
+  <!-- ===== Legend ===== -->
+  <rect x="980" y="800" width="290" height="150" fill="#fafafa" stroke="#b0bec5"/>
+  <text x="992" y="822" font-size="13" font-weight="bold" fill="#263238">Legenda</text>
+  <line x1="992" y1="838" x2="1022" y2="838" class="w5v"/>   <text x="1030" y="842" class="lbl">+5V (alimentação lógica)</text>
+  <line x1="992" y1="858" x2="1022" y2="858" class="wgnd"/>  <text x="1030" y="862" class="lbl">GND comum</text>
+  <line x1="992" y1="878" x2="1022" y2="878" class="wpwm"/>  <text x="1030" y="882" class="lbl">Controle de motor (ENA/IN/ENB)</text>
+  <line x1="992" y1="898" x2="1022" y2="898" class="wout"/>  <text x="1030" y="902" class="lbl">Saída de potência p/ motores</text>
+  <line x1="992" y1="918" x2="1022" y2="918" class="wana"/>  <text x="1030" y="922" class="lbl">IR de linha (analógico A0–A2)</text>
+  <line x1="1140" y1="878" x2="1170" y2="878" class="wdig"/> <text x="1178" y="882" class="lbl">Digital (HC-SR04 / IR obst.)</text>
+  <line x1="1140" y1="898" x2="1170" y2="898" class="wi2c"/> <text x="1178" y="902" class="lbl">I²C (HuskyLens)</text>
+</svg>
