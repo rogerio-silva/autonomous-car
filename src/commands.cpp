@@ -97,6 +97,7 @@ void handleKey(char c) {
         case 'l': behaviors::setMode(behaviors::FOLLOW_LINE);  Serial.println(F("[modo] SEGUIR-LINHA")); break;
         case 'v': behaviors::setMode(behaviors::AVOID);        Serial.println(F("[modo] DESVIO"));        break;
         case 'p': behaviors::setMode(behaviors::TRACK_TARGET); Serial.println(F("[modo] RASTREIO"));      break;
+        case 'N': behaviors::setMode(behaviors::NAVIGATE);     Serial.println(F("[modo] NAVEGACAO"));     break;
 
         // --- Info de visão ---
         case 'i': printVision(); break;
@@ -157,7 +158,7 @@ void printHelp() {
     Serial.println(F("Movimento : w=frente s=re a=esq d=dir  (espaco|x)=parar/emergencia"));
     Serial.println(F("Velocidade: + aumenta   - diminui"));
     Serial.println(F("Trim      : 1/2 esq(-/+)   3/4 dir(-/+)"));
-    Serial.println(F("Modos     : m=MANUAL  l=SEGUIR-LINHA  v=DESVIO  p=RASTREIO"));
+    Serial.println(F("Modos     : m=MANUAL l=SEGUIR-LINHA v=DESVIO p=RASTREIO N=NAVEGACAO"));
     Serial.println(F("Calib. IR : c=ver  f=capturar fundo  g=capturar linha"));
     Serial.println(F("Visao     : i=info do alvo (HuskyLens)"));
     Serial.println(F("Config    : k=salvar(EEPROM)  n=resetar"));
@@ -168,6 +169,9 @@ void printHelp() {
 
 void printStatus() {
     Serial.print(F("[status] modo="));  Serial.print(behaviors::modeName());
+    if (behaviors::mode() == behaviors::NAVIGATE) {
+        Serial.print(F("("));  Serial.print(behaviors::navLayer());  Serial.print(F(")"));
+    }
     Serial.print(F(" vel="));           Serial.print(g_speed);
     Serial.print(F(" pwmL="));          Serial.print(motors::currentLeft());
     Serial.print(F(" pwmR="));          Serial.print(motors::currentRight());

@@ -2,7 +2,7 @@
 
 Carro autônomo inteligente baseado em **Arduino Mega 2560**, com visão computacional embarcada pela **Gravity HuskyLens** e sensoriamento por **ultrassom** e **infravermelho**. O projeto é 100% embarcado: não há interface gráfica nem software externo — apenas o firmware Arduino e a integração dos componentes.
 
-> Status: **M1 — Fundação do Projeto** (estrutura, documentação e workflow). Veja o [roadmap](docs/roadmap.md).
+> Status: **roadmap M1–M5 concluído** — locomoção, sensoriamento, visão (HuskyLens) e navegação autônoma. Veja o [roadmap](docs/roadmap.md).
 
 ---
 
@@ -102,7 +102,9 @@ A partir do M2 o carro é pilotado pelo Monitor Serial (115200 baud), com CLI es
 | `espaço`/`x` | parar | | `k`/`n` | salvar / resetar trim |
 | `+`/`-` | velocidade | | `o`/`t`/`h` | status / telemetria / ajuda |
 
-**Modos:** `m` MANUAL · `l` SEGUIR‑LINHA · `v` DESVIO · `p` RASTREIO (HuskyLens) · `c`/`f`/`g` calibração dos IR · `i` info de visão. Guia completo em [`docs/serial-control.md`](docs/serial-control.md).
+**Modos:** `m` MANUAL · `l` SEGUIR‑LINHA · `v` DESVIO · `p` RASTREIO (HuskyLens) · **`N` NAVEGAÇÃO (autonomia total)** · `c`/`f`/`g` calibração dos IR · `i` info de visão. Guia completo em [`docs/serial-control.md`](docs/serial-control.md).
+
+O modo **NAVEGAÇÃO** funde sensores + visão por prioridade: **Segurança (desvio) > Alvo visual (Tag) > Seguir‑linha > Busca**. O boot é sempre em MANUAL (o carro não se move ao energizar).
 
 ---
 
