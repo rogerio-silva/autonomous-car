@@ -134,6 +134,21 @@ O L298N tem regulador 5V interno e um jumper "5V-EN":
 
 > Dimensionamento de corrente: 2 motores TT puxam ~200 mA cada sem carga e podem passar de 1 A travados; HuskyLens ~0,3–0,5 A; lógica ~0,1 A. Ajuste conforme os motores reais no teste de bancada (ver [`bench-test.md`](bench-test.md)).
 
+### 3.6 Bitola dos cabos
+
+| Trecho | Corrente típica | Bitola |
+|--------|-----------------|--------|
+| `pack(+/−)` → chave → **VS** + retorno GND (potência dos motores) | picos ~2–4 A | **AWG 20** (AWG 22 aceitável) |
+| Link **série** (P1+→P2−) e links **paralelo** (A‖B, C‖D) no pack | corrente do pack | **AWG 20** (ou **fita de níquel** se soldar a ponto) |
+| Entrada/saída do **buck 5V** e 5V da lógica | ~0,5–1 A | AWG 22–24 |
+| Fios de **balanceamento/sense do BMS** | mA | AWG 24–26 |
+| Sinais (sensores, I²C, jumpers) | mA | AWG 24–28 / dupont |
+
+Notas:
+- Prefira **cabo de silicone, multifilar** (flexível, aguenta calor) nos trechos de potência.
+- Mantenha os **cabos de potência curtos**; case o **fusível** (no `pack(+)`) com a bitola (~3–5 A).
+- Margem: AWG 20 conduz ~5–7 A com folga para os picos de partida/stall dos motores.
+
 ## 4. Diagrama de ligação (L298N ↔ Mega 2560)
 
 ```mermaid
@@ -191,3 +206,22 @@ Mega GND ─ GND ─ (−) bateria        VS ── (+) bateria
 ```
 
 > **Montagem completa** (todos os componentes): esquemático SVG, matriz de conexões, guia e arquivo Fritzing em [`assembly/`](assembly/README.md). O diagrama acima cobre apenas a parte de motores.
+
+## 5. Carregamento da bateria (desenvolvimento futuro)
+
+> **Status: planejado.** A solução de carga ainda será definida e detalhada aqui. Esta seção registra apenas as **diretrizes** para a futura implementação.
+
+Princípios (Li-ion 2S):
+- Carrega em **CC/CV até 8,4 V** (4,2 V por célula); **nunca** ultrapassar 4,2 V/célula.
+- Em série, o **balanceamento é obrigatório** (as células derivam; o pack pode somar 8,4 V com uma célula acima de 4,2 V).
+
+Opções a avaliar:
+- **(A) Carregador balanceador 2S** (iMAX B6 ou carregador 2S pronto) + **plugue de balanceamento** (JST-XH 3 vias: B−, BM, B+). Faz CC/CV **e** equaliza — caminho mais seguro.
+- **(B) Módulo carregador 2S CC/CV 8,4 V** + fonte (~9 V).
+- **(C) Fonte de bancada** em **8,4 V** com **limite de corrente** (~0,5–1 A), supervisionada.
+
+Papel do BMS:
+- O **BMS não é carregador** — é **proteção** (corta sobre/subtensão, curto) e, em alguns modelos, **balanceamento lento**.
+- Dá para **carregar através do BMS**, mas ainda é preciso uma **fonte CC/CV 8,4 V** adequada; não usar adaptador "cru" sem CC/CV.
+
+A definir na implementação: carregador escolhido, conector de balanceamento no pack, corrente de carga e procedimento (a documentar aqui e em [`bench-test.md`](bench-test.md)).
