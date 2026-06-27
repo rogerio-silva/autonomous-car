@@ -1,8 +1,9 @@
 /**
- * storage.h — Persistência de configuração na EEPROM do Mega 2560
+ * storage.h — Configuração persistente (EEPROM) com cache em RAM
  *
- * Guarda a calibração de trim dos motores entre reinicializações.
- * Os dados são validados por uma assinatura (magic) e versão.
+ * Fonte única de verdade para os parâmetros calibráveis: trim dos motores
+ * e limiares/polaridade dos sensores IR de linha. Os módulos leem e
+ * escrevem em `data()` e chamam `save()` para persistir.
  * Implementação: src/storage.cpp
  */
 #ifndef STORAGE_H
@@ -12,22 +13,30 @@
 
 namespace storage {
 
-// Configuração persistida. Mantenha compatível com EEPROM_VERSION;
-// ao mudar o layout, incremente a versão em config.h.
+// Configuração persistida. Ao mudar o layout, incremente EEPROM_VERSION
+// em config.h (dados antigos viram padrão automaticamente).
 struct Config {
-    float trimLeft;
-    float trimRight;
+    float   trimLeft;        // [TRIM_MIN, 1.0]
+    float   trimRight;
+    int16_t irThreshold[3];  // limiar linha/fundo por sensor (E, C, D)
+    uint8_t irLineHigh;      // bits 0..2: "sobre a linha" = leitura > limiar
 };
 
-// Lê a configuração da EEPROM. Retorna true se válida (magic+versão
-// conferem); caso contrário preenche `out` com os padrões e retorna false.
-bool load(Config& out);
+// Carrega a config da EEPROM para o cache (ou aplica padrões se inválida).
+// Chamar uma vez no setup(), ANTES de motors/sensors.
+void begin();
 
-// Grava a configuração na EEPROM (com magic+versão).
-void save(const Config& cfg);
+// Cache mutável (fonte de verdade em runtime).
+Config& data();
 
-// Preenche `out` com os valores padrão (sem tocar na EEPROM).
-void defaults(Config& out);
+// Persiste o cache atual na EEPROM.
+void save();
+
+// Restaura o cache para os valores padrão (não grava sozinho).
+void resetDefaults();
+
+// True se a EEPROM continha dados válidos no begin().
+bool wasLoaded();
 
 } // namespace storage
 

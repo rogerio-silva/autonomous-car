@@ -70,4 +70,23 @@ Construir um carro autônomo embarcado capaz de **navegar evitando obstáculos**
 
 ---
 
-> **Próximas entregas** (M3–M5) terão seus requisitos detalhados aqui no início de cada uma. Ver [`roadmap.md`](roadmap.md).
+### Entrega M3 — Sensoriamento  (issue #9)
+**Requisito:** o carro deve perceber o ambiente e agir sobre ele — desviar de obstáculos e seguir uma linha — usando os sensores, mantendo a arquitetura não-bloqueante (atende RF02, RF03, RF04; base para RF06).
+
+**Critérios de aceite:**
+- [x] `sensors`: distância **filtrada por mediana** (HC-SR04) e API de **calibração dos limiares IR**.
+- [x] `storage`: cache central de configuração; **limiares + polaridade IR persistidos** na EEPROM junto com o trim (versão da EEPROM incrementada).
+- [x] Módulo `behaviors` com modos **MANUAL / SEGUIR-LINHA / DESVIO**, não-bloqueantes.
+- [x] **Seguir-linha** por erro ponderado (controle proporcional no diferencial), com busca ao perder a linha.
+- [x] **Desvio de obstáculo** como manobra não-bloqueante (para → recua → gira → retoma), alternando o lado.
+- [x] `commands`: teclas de **modo** e **calibração IR**; em AUTO, `espaço`/`x` é parada de emergência (volta a MANUAL).
+- [x] `main`: `storage::begin()` + dispatch por modo.
+- [x] `pio run` compila sem erros/warnings.
+
+**Validação:** compilação verificada (SUCCESS, sem warnings). **Calibração dos IR, ajuste de ganhos e teste físico ficam para a bancada** (sem hardware no ambiente de build).
+
+**Fora de escopo (futuro):** visão (M4) e fusão completa sensores+visão (M5).
+
+---
+
+> **Próximas entregas** (M4–M5) terão seus requisitos detalhados aqui no início de cada uma. Ver [`roadmap.md`](roadmap.md).

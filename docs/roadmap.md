@@ -14,9 +14,9 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M2 — Plataforma & Locomoção  🚧
+## M2 — Plataforma & Locomoção  ✅
 **Objetivo:** o carro se move de forma controlada.
-- Diagrama de ligação L298N + seção de energia (`hardware.md`).
+- Diagrama de ligação L298N + seção de energia (`hardware.md`) e montagem completa (`assembly/`).
 - Módulo `motors`: rampas de aceleração não-bloqueantes, trim por motor, curvas diferenciais, failsafe.
 - Persistência da calibração em EEPROM (`storage`).
 - CLI serial estilo WASD (`commands`) para pilotar/testar.
@@ -25,14 +25,14 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M3 — Sensoriamento
+## M3 — Sensoriamento  🚧
 **Objetivo:** o carro percebe o ambiente.
-- HC-SR04: leitura filtrada, parada por obstáculo.
-- Array IR de linha: calibração de limiar, seguir-linha básico.
-- IR de obstáculo: integração.
-- Estado `FOLLOW_LINE`.
+- HC-SR04: leitura filtrada (mediana), parada/desvio por obstáculo.
+- Array IR de linha: limiares calibráveis (runtime + EEPROM), seguir-linha proporcional.
+- IR de obstáculo: integrado ao desvio.
+- Módulo `behaviors`: modos MANUAL / SEGUIR-LINHA / DESVIO.
 
-**Entregável:** desvio de obstáculo e seguir-linha por sensores.
+**Entregável:** desvio de obstáculo e seguir-linha por sensores (validado por compilação; calibração e teste físico na bancada).
 
 ---
 
@@ -62,7 +62,7 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 | Milestone | Status |
 |-----------|--------|
 | M1 | ✅ |
-| M2 | 🚧 |
-| M3 | ⬜ |
+| M2 | ✅ |
+| M3 | 🚧 |
 | M4 | ⬜ |
 | M5 | ⬜ |

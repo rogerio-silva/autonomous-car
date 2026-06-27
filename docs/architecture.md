@@ -24,14 +24,15 @@ O sistema é embarcado e organizado em **camadas**: percepção (sensores + vis�
 | Camada | Módulo | Arquivos | Responsabilidade |
 |--------|--------|----------|------------------|
 | Percepção – visão | `vision` | `include/vision.h`, `src/vision.cpp` | Lê resultados da HuskyLens (I²C) e expõe alvo primário + erro horizontal. *(integração em M4)* |
-| Percepção – sensores | `sensors` | `include/sensors.h`, `src/sensors.cpp` | Distância (HC-SR04), seguidor de linha (IR), obstáculo (IR). *(integração em M3)* |
-| Comando / decisão | `main` + `commands` | `src/main.cpp`, `include/commands.h`, `src/commands.cpp` | M2: CLI serial WASD (modo manual). Evoluirá para máquina de estados autônoma (M5). |
+| Percepção – sensores | `sensors` | `include/sensors.h`, `src/sensors.cpp` | Distância **filtrada por mediana** (HC-SR04), seguidor de linha (IR) com limiares calibráveis, obstáculo (IR). |
+| Decisão / autonomia | `behaviors` | `include/behaviors.h`, `src/behaviors.cpp` | Modos MANUAL / SEGUIR-LINHA / DESVIO; lógica não-bloqueante que liga `sensors` a `motors`. |
+| Comando (serial) | `main` + `commands` | `src/main.cpp`, `include/commands.h`, `src/commands.cpp` | CLI WASD, seleção de modo e calibração IR. |
 | Atuação | `motors` | `include/motors.h`, `src/motors.cpp` | Locomoção 2WD via L298N: rampas **não-bloqueantes**, trim por motor e failsafe. |
-| Persistência | `storage` | `include/storage.h`, `src/storage.cpp` | Salva/recupera a calibração (trim) na EEPROM, validada por magic+versão. |
+| Persistência | `storage` | `include/storage.h`, `src/storage.cpp` | Cache central de configuração (trim + limiares/polaridade IR) na EEPROM, validado por magic+versão. **Fonte única** lida por `motors` e `sensors`. |
 | Configuração | — | `include/config.h` | Pinos e constantes globais. |
 
-### Loop de controle (M2 — não-bloqueante)
-O `loop()` não usa `delay()`: a cada iteração `commands::poll()` lê as teclas e atualiza os alvos/telemetria, e `motors::update()` avança as rampas, aplica o PWM (com trim) e o failsafe. Esse padrão não-bloqueante é a base sobre a qual a autonomia (M3–M5) será construída.
+### Loop de controle (não-bloqueante)
+O `loop()` não usa `delay()`: `commands::poll()` lê as teclas (pilotagem manual, modo, calibração); se o modo não é MANUAL, `behaviors::update()` executa o comportamento autônomo ativo (lendo sensores e definindo alvos dos motores); e `motors::update()` avança as rampas, aplica o PWM (com trim) e o failsafe. Persistência é centralizada em `storage` (fonte única, em EEPROM).
 
 ### Princípios
 - **Baixo acoplamento:** cada módulo expõe uma interface mínima por `namespace`; o `main` orquestra.
@@ -40,10 +41,22 @@ O `loop()` não usa `delay()`: a cada iteração `commands::poll()` lê as tecla
 
 ## 3. Modos de operação (evolução)
 
-- **M2 (atual) — MANUAL:** o `loop()` apenas pilota via CLI serial; não há decisão autônoma. Foco em locomoção confiável e calibrada.
-- **M3 — sensoriamento:** introduz leitura/uso de sensores (parada por obstáculo, seguir-linha) e o estado `FOLLOW_LINE`.
-- **M4 — visão:** estado `TRACK_TARGET` (segue alvo da HuskyLens).
-- **M5 — autonomia:** máquina de estados completa com fusão sensores+visão (`NAVIGATE`).
+- **M2 — MANUAL:** locomoção confiável e calibrada via CLI serial.
+- **M3 (atual) — modos por sensores:** `behaviors` adiciona **SEGUIR-LINHA** (controle proporcional pelo array IR) e **DESVIO** (manobra não-bloqueante por obstáculo), selecionáveis pela serial. MANUAL continua disponível.
+- **M4 — visão:** modo `TRACK_TARGET` (segue alvo da HuskyLens).
+- **M5 — autonomia:** fusão sensores+visão e navegação (`NAVIGATE`).
+
+### Modos do M3
+```
+        +--------+   l   +--------------+
+        | MANUAL | ----> | SEGUIR-LINHA |  erro ponderado (3× IR) -> diferencial
+        |        | <---- |              |  (espaço/x = emergência -> MANUAL)
+        |        |   m   +--------------+
+        |        |   v   +--------------+
+        |        | ----> |   DESVIO     |  cruzeiro -> ré -> giro -> cruzeiro
+        +--------+ <---- +--------------+  (alterna o lado a cada obstáculo)
+                     m
+```
 
 Esboço da máquina de estados autônoma (alvo do M5):
 
