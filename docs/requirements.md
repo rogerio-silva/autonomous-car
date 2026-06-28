@@ -129,6 +129,19 @@ Construir um carro autônomo embarcado capaz de **navegar evitando obstáculos**
 
 ---
 
+## Trilha futura — Rumo Console (M6/M7)
+
+**Requisito (futuro, não implementar agora):** desenvolver o **Rumo Console**, software companheiro de *ground-control* que consome o stream serial real de telemetria (`[status] …` a 115200 baud) e expõe o conjunto real de comandos (CLI WASD), recriando fielmente o **design system Rumo**. Especificação completa (tokens, primitivos, 4 telas, estado, integração serial) em [`design_handoff_rumo_console/`](design_handoff_rumo_console/).
+
+Planejamento rastreado no **épico [#28](https://github.com/rogerio-silva/autonomous-car/issues/28)** e nas issues `status:futuro` dos milestones:
+
+- **M6 — Fundação do Console:** setup/framework (#29), tokens (#30), primitivos core (#31), primitivos de telemetria (#32), shell + navegação + branding (#33).
+- **M7 — Telas & Integração:** Dashboard (#34), Serial CLI (#35), Calibração (#36), Hardware & Pinout (#37), camada de estado + simulação (#38), integração serial real + acessibilidade (#39).
+
+> Esta trilha é **explicitamente futura**: nenhum software dela é implementado na etapa atual. O firmware permanece o foco do produto. Ver nota em [`../CLAUDE.md`](../CLAUDE.md).
+
+---
+
 ### Entrega de apoio — Prompt de IA para chassi + bolha  (issue #23)
 **Requisito:** disponibilizar um **prompt em Markdown**, detalhado e reutilizável, para gerar via IA o **projeto do chassi** e da **bolha/carroceria**, embutindo as restrições reais do projeto e o posicionamento sensorial já definido.
 

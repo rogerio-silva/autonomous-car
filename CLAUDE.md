@@ -4,7 +4,9 @@ Orientações para qualquer agente (humano ou IA) que desenvolva neste repositó
 
 ## 1. O que é este projeto
 
-Carro autônomo **100% embarcado** em **Arduino Mega 2560**, com visão computacional pela **Gravity HuskyLens** (I²C) e sensoriamento ultrassônico + infravermelho. **Não há** software de PC, app ou interface web — entregamos apenas firmware Arduino (C++) e a integração física dos componentes.
+Carro autônomo **100% embarcado** em **Arduino Mega 2560**, com visão computacional pela **Gravity HuskyLens** (I²C) e sensoriamento ultrassônico + infravermelho. A entrega corrente é **apenas firmware Arduino (C++) + integração física** — o firmware é *headless* (sem app/UI).
+
+> **Trilha futura — Rumo Console.** Existe um *design system* e o projeto de um software companheiro de *ground-control* (o **Rumo Console**) em [`docs/design_handoff_rumo_console/`](docs/design_handoff_rumo_console/). É uma **trilha planejada para o futuro** (milestones **M6/M7**, épico **#28**), **fora do escopo de implementação atual** — o **firmware permanece o foco**. Não desenvolver software dessa trilha sem solicitação explícita.
 
 Decisões fixas do projeto:
 - **MCU:** Arduino Mega 2560
