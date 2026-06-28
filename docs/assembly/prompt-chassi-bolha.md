@@ -24,7 +24,7 @@ Projetar **dois componentes** para um carro autônomo didático:
 O carro é **100% embarcado** (sem PC). Tração **2WD traseira**. Priorize **simplicidade de montagem, acesso à eletrônica e posicionamento sensorial correto**.
 
 ## Restrições fixas do projeto (não alterar)
-- **Tração:** 2WD — 2 motores DC traseiros (TT gearmotor amarelo) + 2 rodas dianteiras livres (ou 1 roda boba/caster).
+- **Tração:** 2WD — 2 motores DC traseiros (rodas motrizes) + **2 rodas dianteiras livres** (sem motor), totalizando 4 rodas.
 - **Controlador:** Arduino **Mega 2560** (placa grande).
 - **Driver de motor:** módulo **L298N** (com dissipador alto).
 - **Visão:** câmera **Gravity HuskyLens** (frontal, elevada, visão desobstruída).
@@ -43,7 +43,7 @@ O carro é **100% embarcado** (sem PC). Tração **2WD traseira**. Priorize **si
 | IR de linha (3×) | módulo ~10 × 48 (sensor TCRT5000) | embaixo, rente ao chão **3–10 mm**, espaçados na largura |
 | Motor DC | corpo 70 × 32 × 22 | 2 atrás; eixo de saída na face de 32 mm |
 | Roda + pneu (motriz) | Ø66 (raio 33) × 25 de largura | 2 traseiras motrizes |
-| Roda dianteira _(a confirmar: 2 livres ou 1 caster)_ | livre/caster | manter o carro nivelado |
+| Rodas dianteiras (2×) | Ø66 × 25 (mesmas das motrizes) | **livres** (sem motor); manter o carro nivelado |
 | Pack 2S 18650 | ~2×(18 × 65) + suporte | baixo e centrado (peso/CG) |
 | Powerbank | 85 × 45 × 45 | **centralizado e próximo ao eixo de tração (traseiro)**; acesso ao botão/USB |
 | Chave geral / fusível | — | acessível por fora |
@@ -94,11 +94,10 @@ Medidas reais já preenchidas na tabela de componentes:
 
 - **Powerbank:** 85 × 45 × 45 mm.
 - **Motor DC:** corpo 70 × 32 × 22 mm.
-- **Roda + pneu (motriz):** Ø66 mm (raio 33) × 25 mm de largura.
+- **Roda + pneu:** Ø66 mm (raio 33) × 25 mm de largura (iguais nas 4 rodas).
+- **Rodas dianteiras:** 2 rodas **livres** (sem motor).
 
-Ainda **a confirmar** (único item em aberto):
-
-- **Roda dianteira** — 2 rodas livres ou 1 roda boba (caster)?
+Todas as medidas estão preenchidas — o prompt está pronto para uso.
 
 ## Por que pedimos OpenSCAD
 
