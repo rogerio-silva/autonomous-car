@@ -41,10 +41,11 @@ O carro é **100% embarcado** (sem PC). Tração **2WD traseira**. Priorize **si
 | HC-SR04 | 45 × 20 × 15 (2 cilindros Ø16) | berço frontal; "olhos" passando pela carroceria |
 | IR obstáculo | ~30 × 14 | frontal, regulável (trimpot acessível) |
 | IR de linha (3×) | módulo ~10 × 48 (sensor TCRT5000) | embaixo, rente ao chão **3–10 mm**, espaçados na largura |
-| Motor TT + roda _(a confirmar)_ | roda Ø~65 | 2 atrás; suportes padrão de motor TT |
-| Roda dianteira _(a confirmar)_ | livre/caster | manter o carro nivelado |
+| Motor DC | corpo 70 × 32 × 22 | 2 atrás; eixo de saída na face de 32 mm |
+| Roda + pneu (motriz) | Ø66 (raio 33) × 25 de largura | 2 traseiras motrizes |
+| Roda dianteira _(a confirmar: 2 livres ou 1 caster)_ | livre/caster | manter o carro nivelado |
 | Pack 2S 18650 | ~2×(18 × 65) + suporte | baixo e centrado (peso/CG) |
-| Powerbank _(a confirmar)_ | ~100 × 60 × 22 | acesso ao botão/USB; baixo e centrado |
+| Powerbank | 85 × 45 × 45 | acesso ao botão/USB; baixo e centrado |
 | Chave geral / fusível | — | acessível por fora |
 
 ## Requisitos de posicionamento sensorial (críticos)
@@ -85,13 +86,17 @@ O carro é **100% embarcado** (sem PC). Tração **2WD traseira**. Priorize **si
 
 ---
 
-## Antes de usar — confirmar 3 medidas
+## Antes de usar — medidas
 
-A IA vai chutar valores se você não informar. Meça e substitua na tabela de componentes:
+Medidas reais já preenchidas na tabela de componentes:
 
-1. **Powerbank** — comprimento × largura × espessura reais.
-2. **Motor/roda** — confirmar se é o TT amarelo (roda Ø~65 mm).
-3. **Roda dianteira** — 2 rodas livres ou 1 roda boba (caster).
+- **Powerbank:** 85 × 45 × 45 mm.
+- **Motor DC:** corpo 70 × 32 × 22 mm.
+- **Roda + pneu (motriz):** Ø66 mm (raio 33) × 25 mm de largura.
+
+Ainda **a confirmar** (único item em aberto):
+
+- **Roda dianteira** — 2 rodas livres ou 1 roda boba (caster)?
 
 ## Por que pedimos OpenSCAD
 
