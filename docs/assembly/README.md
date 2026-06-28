@@ -106,3 +106,11 @@ O `.fzz`/`.fz` incluído é **best-effort**: foi gerado como XML de sketch do Fr
 7. [ ] HuskyLens em I²C: R→20(SDA), T→21(SCL), +→5V, −→GND.
 8. [ ] Conferir tudo contra esta matriz e `include/config.h`.
 9. [ ] Gravar o firmware (`pio run -t upload`) e testar pelo Monitor Serial (ver [`../serial-control.md`](../serial-control.md)).
+
+---
+
+## Projeto mecânico (chassi + carroceria)
+
+Para projetar o **chassi** e a **bolha/carroceria** com auxílio de IA, use o prompt
+pronto em [`prompt-chassi-bolha.md`](prompt-chassi-bolha.md) — ele embute as restrições
+do projeto, o posicionamento sensorial e pede entregáveis fabricáveis (incl. OpenSCAD).

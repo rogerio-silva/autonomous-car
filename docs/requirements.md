@@ -126,3 +126,15 @@ Construir um carro autônomo embarcado capaz de **navegar evitando obstáculos**
 ---
 
 > **Roadmap concluído (M1–M5).** Evoluções futuras (ex.: PID no seguir-linha, telemetria avançada, novos comportamentos) entram como novas entregas seguindo o mesmo processo. Ver [`roadmap.md`](roadmap.md).
+
+---
+
+### Entrega de apoio — Prompt de IA para chassi + bolha  (issue #23)
+**Requisito:** disponibilizar um **prompt em Markdown**, detalhado e reutilizável, para gerar via IA o **projeto do chassi** e da **bolha/carroceria**, embutindo as restrições reais do projeto e o posicionamento sensorial já definido.
+
+**Critérios de aceite:**
+- [x] Arquivo [`assembly/prompt-chassi-bolha.md`](assembly/prompt-chassi-bolha.md) com o prompt completo em PT-BR (papel, restrições fixas, componentes cotados, posicionamento sensorial, entregáveis incl. **OpenSCAD parametrizado**).
+- [x] Requisito registrado aqui.
+- [x] Link a partir de [`assembly/README.md`](assembly/README.md) (seção "Projeto mecânico").
+
+**Fora de escopo:** o projeto mecânico em si (gerado externamente pela IA a partir do prompt); validação física na bancada.
