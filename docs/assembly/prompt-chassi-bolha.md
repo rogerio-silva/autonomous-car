@@ -45,18 +45,20 @@ O carro é **100% embarcado** (sem PC). Tração **2WD traseira**. Priorize **si
 | Roda + pneu (motriz) | Ø66 (raio 33) × 25 de largura | 2 traseiras motrizes |
 | Roda dianteira _(a confirmar: 2 livres ou 1 caster)_ | livre/caster | manter o carro nivelado |
 | Pack 2S 18650 | ~2×(18 × 65) + suporte | baixo e centrado (peso/CG) |
-| Powerbank | 85 × 45 × 45 | acesso ao botão/USB; baixo e centrado |
+| Powerbank | 85 × 45 × 45 | **centralizado e próximo ao eixo de tração (traseiro)**; acesso ao botão/USB |
 | Chave geral / fusível | — | acessível por fora |
 
 ## Requisitos de posicionamento sensorial (críticos)
 - **HC-SR04 e IR de obstáculo:** frontais, apontando reto para frente, **feixe livre** (nada do chassi/bolha na frente). Altura ~3–8 cm do chão.
 - **Array IR de linha:** **na frente das rodas motrizes**, virado para baixo, **3–10 mm** do chão; os 3 sensores espalhados na largura de modo que, na linha reta, só o **central** veja a linha. Prever **regulagem de altura** (rasgos/oblongos).
 - **HuskyLens:** **elevada e à frente**, olhando para frente (nível, com opção de leve inclinação para baixo p/ visão de linha). Evitar reflexo/contraluz; lente nunca obstruída pela bolha.
-- **Peso (baterias):** baixo e centrado, ligeiramente à frente do eixo traseiro, sem empinar.
+- **Peso (baterias/powerbank):** baixo e centrado; o **powerbank** deve ficar **centralizado e próximo ao eixo de tração (traseiro)** para concentrar a massa sobre as rodas motrizes (tração e estabilidade), sem empinar.
 - **GND/cabos:** prever canaletas/passagens de cabo e separação entre potência e sinal.
 
 ## Requisitos do chassi
 - Placa base (sugerir material: **acrílico 3 mm**, **MDF 3 mm** ou **PETG/PLA impresso**) com **furação cotada** para todos os módulos.
+- **Berço/caixa de encaixe dos eletrônicos:** projetar uma **capa/caixa com desníveis (recessos) sob medida** que receba e **encaixe cada módulo** (Mega, L298N, powerbank, pack 2S) em seu nicho — cavidades com a forma de cada peça, batentes e travas que impeçam deslizamento por vibração, dispensando (ou reduzindo) parafusos. Pensar em **níveis/andares** se faltar área de planta (ex.: powerbank/baterias embaixo, placas em cima).
+- O nicho do **powerbank** deve posicioná-lo **centralizado e sobre o eixo traseiro**, com **abertura lateral** para o botão/USB.
 - Suportes/torres impressas para HuskyLens e berço do HC-SR04.
 - **Modularidade:** sensores em peças separadas, com **rasgos oblongos** para ajuste fino.
 - Vão livre (ground clearance) compatível com o IR de linha.
