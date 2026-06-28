@@ -114,3 +114,8 @@ O `.fzz`/`.fz` incluído é **best-effort**: foi gerado como XML de sketch do Fr
 Para projetar o **chassi** e a **bolha/carroceria** com auxílio de IA, use o prompt
 pronto em [`prompt-chassi-bolha.md`](prompt-chassi-bolha.md) — ele embute as restrições
 do projeto, o posicionamento sensorial e pede entregáveis fabricáveis (incl. OpenSCAD).
+
+O **projeto CAD resultante** (modelo OpenSCAD parametrizado + documentação) está em
+[`cad/`](cad/): [`chassi-bolha.scad`](cad/chassi-bolha.scad) e
+[`chassi-bolha.md`](cad/chassi-bolha.md). Abra o `.scad` no OpenSCAD e ajuste a variável
+`part` para exportar cada peça (`base`, `tray`, `husky`, `hc_sr04`, `line_ir`, `bubble`).

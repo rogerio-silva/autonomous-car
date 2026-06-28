@@ -6,7 +6,24 @@
 
 ---
 
-## 1. O que foi corrigido nesta versão
+## 0. Revisão na integração ao repositório
+
+O arquivo gerado pela IA foi **revisado e corrigido** ao ser integrado ao repositório.
+Correções aplicadas (validadas renderizando o `tray`/`assembly` no OpenSCAD):
+
+1. **Dimensões reais do powerbank** — `85 × 45 × 45 mm` (estava `92 × 52 × 46`, divergente do componente medido).
+2. **Colisão entre nichos eliminada** — na geração original, o nicho do **L298N** avançava ~13 mm sobre o nicho do **pack 2S** no canto dianteiro direito (sobreposição de sólidos no `tray`). O layout foi refeito:
+   - **baterias (powerbank + pack 2S) na traseira**, sobre o eixo de tração — concentra a massa nas rodas motrizes (melhor tração/estabilidade, alinhado ao requisito do prompt);
+   - **Arduino Mega + L298N à frente**.
+   Os quatro nichos ficam agora **sem sobreposição** e contidos no `tray`.
+3. **Non-manifold do suporte HC-SR04** — os rasgos de fixação tocavam exatamente a borda da placa (face coincidente, aviso *"not a valid 2-manifold"*). Foram recuados (`±20 mm`); `hc_sr04` e `assembly` passam a renderizar limpos.
+4. **Rasgos da cinta do powerbank** — parametrizados pela posição do nicho (`pbank_cx/cy`), antes fixos em coordenadas da posição antiga.
+
+> As correções de estilo da bolha (alinhamento fino da janela da HuskyLens, divisão da casca em partes) seguem como refinamento futuro — ver seção 10.
+
+---
+
+## 1. O que foi corrigido na versão v2 (pela IA)
 
 ### 1.1 Correção do `tray`
 O `tray` da versão anterior apresentava dois problemas geométricos principais:
@@ -86,16 +103,16 @@ A nova `bubble` deixou de ser uma meia elipsoide genérica e passou a ter lingua
 
 | Componente | Centro X | Centro Y | Envelope reservado |
 |---|---:|---:|---:|
-| Powerbank | 65 | 0 | 92 × 52 × 46 |
-| Arduino Mega | 169 | -38 | 107 × 58 |
-| L298N | 140 | 42 | 50 × 50 × 27 |
-| Pack 2S | 198 | 44 | 82 × 46 × 24 |
+| Powerbank | 58 | -26 | 85 × 45 × 45 |
+| Pack 2S | 58 | 26 | 82 × 46 × 24 |
+| Arduino Mega | 175 | -40 | 107 × 58 |
+| L298N | 160 | 40 | 50 × 50 × 27 |
 
-### Critério de layout
-- **Powerbank**: centralizado e junto ao eixo traseiro para tração.
+### Critério de layout (revisado)
+- **Powerbank + Pack 2S**: na **traseira**, lado a lado sobre o eixo de tração — as duas baterias pesadas ficam sobre as rodas motrizes (tração/estabilidade).
 - **Arduino Mega**: setor dianteiro esquerdo, com acesso lateral ao USB.
 - **L298N**: setor dianteiro direito, com ventilação superior.
-- **Pack 2S**: setor dianteiro direito avançado, porém totalmente contido no `tray`.
+- Os quatro nichos ficam **sem sobreposição** e contidos no `tray` (verificado por render).
 
 ---
 

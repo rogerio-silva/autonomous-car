@@ -1,7 +1,13 @@
 /*
 Projeto: Chassi + bolha para carro autônomo Arduino Mega 2WD
 Versão: v2 - correção de alinhamento do tray + bolha estilo sedã premium (inspirada no Mercedes C300)
-Autor: gerado por ChatGPT
+Revisão (integração ao repositório):
+  - powerbank com dimensões reais 85x45x45 (era 92x52x46);
+  - layout dos nichos refeito: baterias (powerbank+pack 2S) na traseira sobre
+    o eixo de tração; Mega+L298N à frente. Elimina a colisão entre os nichos
+    do L298N e do pack 2S existente na geração original;
+  - rasgos da cinta do powerbank parametrizados pela posição do nicho.
+Autor: gerado por ChatGPT; revisado na integração ao repositório.
 Unidades: milímetros
 Idioma: PT-BR
 
@@ -55,29 +61,33 @@ wall_t = 2.4;
 // z = 0 mm na face inferior da peça exportada
 // ==========================================================
 
-// Powerbank: centralizado e próximo ao eixo traseiro.
-pbank_cx = 65;
-pbank_cy = 0;
-pbank_l  = 92;
-pbank_w  = 52;
-pbank_h  = 46;
+// Powerbank: traseira, sobre o eixo de tração. Dimensões reais 85x45x45 (medido).
+// Recuado em Y (cy<0) para dividir a traseira com o pack 2S — as duas baterias
+// pesadas ficam sobre as rodas motrizes (melhor tração/estabilidade).
+pbank_cx = 58;
+pbank_cy = -26;
+pbank_l  = 85;
+pbank_w  = 45;
+pbank_h  = 45;
 
-// Arduino Mega 2560: mantido no quadrante dianteiro esquerdo.
-mega_cx = 169;
-mega_cy = -38;
+// Arduino Mega 2560: quadrante dianteiro esquerdo (acesso lateral ao USB).
+mega_cx = 175;
+mega_cy = -40;
 mega_l  = 107;
 mega_w  = 58;
 
-// L298N: quadrante dianteiro direito intermediário.
-l298_cx = 140;
-l298_cy = 42;
+// L298N: quadrante dianteiro direito (ventilação superior).
+l298_cx = 160;
+l298_cy = 40;
 l298_l  = 50;
 l298_w  = 50;
 l298_h  = 27;
 
-// Pack 2S 18650: deslocado levemente para dentro para eliminar sobreposição/área vazada no tray.
-pack_cx = 198;
-pack_cy = 44;
+// Pack 2S 18650: traseira direita, ao lado do powerbank, sobre o eixo de tração.
+// Reposicionado para eliminar a colisão com o nicho do L298N (que na v2 original
+// avançava sobre a área do pack no canto dianteiro direito).
+pack_cx = 58;
+pack_cy = 26;
 pack_l  = 82;
 pack_w  = 46;
 pack_h  = 24;
@@ -206,10 +216,10 @@ module base_plate() {
             translate([p[0], p[1], base_t/2])
                 m3_hole(h=base_t+4);
 
-        // Rasgos para cinta do powerbank.
-        for (xpos = [35, 95]) {
-            translate([xpos,  33, base_t/2]) rotate([0,0,90]) slot_cut_z(18, 4.2, base_t+4);
-            translate([xpos, -33, base_t/2]) rotate([0,0,90]) slot_cut_z(18, 4.2, base_t+4);
+        // Rasgos para cinta do powerbank (seguem a posição do nicho).
+        for (xpos = [pbank_cx - 22, pbank_cx + 22]) {
+            translate([xpos, pbank_cy + 28, base_t/2]) rotate([0,0,90]) slot_cut_z(18, 4.2, base_t+4);
+            translate([xpos, pbank_cy - 28, base_t/2]) rotate([0,0,90]) slot_cut_z(18, 4.2, base_t+4);
         }
 
         // Rasgos para cinta do pack 2S.
@@ -295,7 +305,7 @@ module electronics_tray() {
                     translate([dx, dy, 0]) simple_standoff(h=6, od=7, hole_d=3.4);
         }
 
-        // Nicho pack 2S: deslocado para dentro para não ultrapassar a borda da peça.
+        // Nicho pack 2S: traseira direita, ao lado do powerbank (sem colisão com o L298N).
         translate([pack_cx, pack_cy, tray_plate_t + h_high/2]) {
             tray_nest(pack_l + 2*wall_t, pack_w + 2*wall_t, pack_l + fit_clear, pack_w + fit_clear, wall_t, h_high, "front");
             ring_stops(pack_l, pack_w, stop_d=6, stop_h=4, inset=8);
@@ -355,7 +365,8 @@ module hc_sr04_mount() {
             cube([plate_w, plate_h, plate_t], center=true);
             for (dy = [-13, 13])
                 translate([dy, 0, 0]) cylinder(h=plate_t+2, d=18.5, center=true, $fn=40);
-            for (dy = [-23, 23])
+            // Rasgos de fixação recuados da borda (evita face coincidente / não-manifold).
+            for (dy = [-20, 20])
                 translate([dy, -10, 0]) slot_cut_z(10, 3.4, plate_t+2);
         }
     }
