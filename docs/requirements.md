@@ -142,6 +142,17 @@ Planejamento rastreado no **épico [#28](https://github.com/rogerio-silva/autono
 
 ---
 
+### Entrega de apoio — Projeto CAD do chassi + bolha  (issue #42)
+**Requisito:** integrar ao repositório o **projeto CAD** (modelo OpenSCAD parametrizado + documentação) do chassi e da bolha/carroceria, gerado por IA a partir de [`assembly/prompt-chassi-bolha.md`](assembly/prompt-chassi-bolha.md), e **corrigir as inconsistências** do modelo.
+
+**Critérios de aceite:**
+- [x] Arquivos em [`assembly/cad/`](assembly/cad/): `chassi-bolha.scad` + `chassi-bolha.md`, com link a partir de [`assembly/README.md`](assembly/README.md).
+- [x] Inconsistências corrigidas e **validadas por render no OpenSCAD**: dimensões reais do powerbank (85×45×45); colisão entre os nichos do L298N e do pack 2S no `tray`; aviso *non-manifold* no suporte HC-SR04; parametrização dos rasgos da cinta do powerbank.
+
+**Fora de escopo (futuro):** refino estético da bolha, divisão da casca para impressão, suportes de motor/rodas e base 2D DXF (ver seção 10 do doc CAD).
+
+---
+
 ### Entrega de apoio — Prompt de IA para chassi + bolha  (issue #23)
 **Requisito:** disponibilizar um **prompt em Markdown**, detalhado e reutilizável, para gerar via IA o **projeto do chassi** e da **bolha/carroceria**, embutindo as restrições reais do projeto e o posicionamento sensorial já definido.
 
