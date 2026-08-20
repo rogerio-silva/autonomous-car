@@ -36,7 +36,7 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M4 — Visão Computacional  🚧
+## M4 — Visão Computacional  ✅
 **Objetivo:** integrar a HuskyLens como percepção principal.
 - Conexão I²C; algoritmo **Tag (AprilTag)** como primário.
 - Módulo `vision`: leitura do maior bloco, ID e erro horizontal.
@@ -46,7 +46,7 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 
 ---
 
-## M5 — Autonomia  🚧
+## M5 — Autonomia  ✅
 **Objetivo:** navegação autônoma por fusão de dados.
 - Modo `NAVIGATE`: arbitrador por prioridade (segurança → alvo → linha → busca).
 - Manobra de desvio latcheada; núcleos de controle reutilizados dos modos isolados.
@@ -65,4 +65,4 @@ Desenvolvimento incremental em 5 milestones. Cada fase assume a anterior estáve
 | M2 | ✅ |
 | M3 | ✅ |
 | M4 | ✅ |
-| M5 | 🚧 |
+| M5 | ✅ |

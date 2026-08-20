@@ -162,3 +162,11 @@ Planejamento rastreado no **épico [#28](https://github.com/rogerio-silva/autono
 - [x] Link a partir de [`assembly/README.md`](assembly/README.md) (seção "Projeto mecânico").
 
 **Fora de escopo:** o projeto mecânico em si (gerado externamente pela IA a partir do prompt); validação física na bancada.
+
+---
+
+### Entrega de apoio — Corrigir status de M4/M5 no roadmap  (issue #44)
+**Requisito:** o `roadmap.md` estava desatualizado — cabeçalho de M4 marcado 🚧 mas tabela-resumo ✅ (inconsistente entre si), e M5 marcado 🚧 apesar de as 6 issues do milestone já estarem fechadas no GitHub.
+
+**Critérios de aceite:**
+- [x] Cabeçalho e tabela-resumo do `roadmap.md` marcam M4 e M5 como ✅, de forma consistente entre si.
